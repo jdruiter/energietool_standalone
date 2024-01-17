@@ -1,0 +1,291 @@
+{
+  "message": "Success",
+  "data": {
+    "e": [
+      {
+        "all_in_price": 0.3422001,
+        "datetime": "2023-03-03T00:00:00",
+        "purchase_price": 0.13931,
+        "extra_fee_price": 0.1897401
+      },
+      {
+        "all_in_price": 0.32853920000000003,
+        "datetime": "2023-03-03T01:00:00",
+        "purchase_price": 0.12802000000000002,
+        "extra_fee_price": 0.17607920000000005
+      },
+      {
+        "all_in_price": 0.32947089999999996,
+        "datetime": "2023-03-03T02:00:00",
+        "purchase_price": 0.12879,
+        "extra_fee_price": 0.17701089999999997
+      },
+      {
+        "all_in_price": 0.306614,
+        "datetime": "2023-03-03T03:00:00",
+        "purchase_price": 0.10990000000000001,
+        "extra_fee_price": 0.154154
+      },
+      {
+        "all_in_price": 0.307219,
+        "datetime": "2023-03-03T04:00:00",
+        "purchase_price": 0.11040000000000001,
+        "extra_fee_price": 0.154759
+      },
+      {
+        "all_in_price": 0.3215091,
+        "datetime": "2023-03-03T05:00:00",
+        "purchase_price": 0.12221,
+        "extra_fee_price": 0.1690491
+      },
+      {
+        "all_in_price": 0.3698849,
+        "datetime": "2023-03-03T06:00:00",
+        "purchase_price": 0.16219,
+        "extra_fee_price": 0.21742490000000003
+      },
+      {
+        "all_in_price": 0.39994129999999994,
+        "datetime": "2023-03-03T07:00:00",
+        "purchase_price": 0.18703,
+        "extra_fee_price": 0.2474813
+      },
+      {
+        "all_in_price": 0.41345699999999996,
+        "datetime": "2023-03-03T08:00:00",
+        "purchase_price": 0.1982,
+        "extra_fee_price": 0.260997
+      },
+      {
+        "all_in_price": 0.37167569999999994,
+        "datetime": "2023-03-03T09:00:00",
+        "purchase_price": 0.16366999999999998,
+        "extra_fee_price": 0.21921569999999999
+      },
+      {
+        "all_in_price": 0.3322902,
+        "datetime": "2023-03-03T10:00:00",
+        "purchase_price": 0.13112000000000001,
+        "extra_fee_price": 0.17983020000000002
+      },
+      {
+        "all_in_price": 0.330935,
+        "datetime": "2023-03-03T11:00:00",
+        "purchase_price": 0.13,
+        "extra_fee_price": 0.17847500000000002
+      },
+      {
+        "all_in_price": 0.3098568,
+        "datetime": "2023-03-03T12:00:00",
+        "purchase_price": 0.11258,
+        "extra_fee_price": 0.1573968
+      },
+      {
+        "all_in_price": 0.3099899,
+        "datetime": "2023-03-03T13:00:00",
+        "purchase_price": 0.11269,
+        "extra_fee_price": 0.1575299
+      },
+      {
+        "all_in_price": 0.3123494,
+        "datetime": "2023-03-03T14:00:00",
+        "purchase_price": 0.11464,
+        "extra_fee_price": 0.15988940000000001
+      },
+      {
+        "all_in_price": 0.30410929999999997,
+        "datetime": "2023-03-03T15:00:00",
+        "purchase_price": 0.10783,
+        "extra_fee_price": 0.1516493
+      },
+      {
+        "all_in_price": 0.333355,
+        "datetime": "2023-03-03T16:00:00",
+        "purchase_price": 0.132,
+        "extra_fee_price": 0.18089500000000003
+      },
+      {
+        "all_in_price": 0.3623829,
+        "datetime": "2023-03-03T17:00:00",
+        "purchase_price": 0.15599000000000002,
+        "extra_fee_price": 0.20992290000000002
+      },
+      {
+        "all_in_price": 0.373285,
+        "datetime": "2023-03-03T18:00:00",
+        "purchase_price": 0.165,
+        "extra_fee_price": 0.220825
+      },
+      {
+        "all_in_price": 0.333355,
+        "datetime": "2023-03-03T19:00:00",
+        "purchase_price": 0.132,
+        "extra_fee_price": 0.18089500000000003
+      },
+      {
+        "all_in_price": 0.3269662,
+        "datetime": "2023-03-03T20:00:00",
+        "purchase_price": 0.12672,
+        "extra_fee_price": 0.17450620000000003
+      },
+      {
+        "all_in_price": 0.3263975,
+        "datetime": "2023-03-03T21:00:00",
+        "purchase_price": 0.12625,
+        "extra_fee_price": 0.1739375
+      },
+      {
+        "all_in_price": 0.32086780000000004,
+        "datetime": "2023-03-03T22:00:00",
+        "purchase_price": 0.12168000000000001,
+        "extra_fee_price": 0.16840780000000002
+      },
+      {
+        "all_in_price": 0.31218,
+        "datetime": "2023-03-03T23:00:00",
+        "purchase_price": 0.1145,
+        "extra_fee_price": 0.15972
+      }
+    ],
+    "g": [
+      {
+        "all_in_price": 1.2485022,
+        "datetime": "2023-03-03T00:00:00",
+        "purchase_price": 0.47372,
+        "extra_fee_price": 0.6558442
+      },
+      {
+        "all_in_price": 1.2485022,
+        "datetime": "2023-03-03T01:00:00",
+        "purchase_price": 0.47372,
+        "extra_fee_price": 0.6558442
+      },
+      {
+        "all_in_price": 1.2485022,
+        "datetime": "2023-03-03T02:00:00",
+        "purchase_price": 0.47372,
+        "extra_fee_price": 0.6558442
+      },
+      {
+        "all_in_price": 1.2485022,
+        "datetime": "2023-03-03T03:00:00",
+        "purchase_price": 0.47372,
+        "extra_fee_price": 0.6558442
+      },
+      {
+        "all_in_price": 1.2485022,
+        "datetime": "2023-03-03T04:00:00",
+        "purchase_price": 0.47372,
+        "extra_fee_price": 0.6558442
+      },
+      {
+        "all_in_price": 1.2485022,
+        "datetime": "2023-03-03T05:00:00",
+        "purchase_price": 0.47372,
+        "extra_fee_price": 0.6558442
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T06:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T07:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T08:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T09:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T10:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T11:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T12:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T13:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T14:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T15:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T16:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T17:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T18:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T19:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T20:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T21:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      },
+      {
+        "all_in_price": 1.2479577000000002,
+        "datetime": "2023-03-03T22:00:00",
+        "purchase_price": 0.47327,
+        "extra_fee_price": 0.6552997
+      }
+    ]
+  }
+}
