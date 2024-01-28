@@ -30,6 +30,7 @@ SESSION_COOKIE_SECURE = True    # session cookie only over https
 ALLOWED_HOSTS = [
     'localhost',
     'eprijs.nl',
+    '127.0.0.1',
 ]
 
 

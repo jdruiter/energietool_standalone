@@ -18,3 +18,25 @@ footer {
     border-width: 1px 0;
     box-shadow: inset 0 0.5em 1.5em rgba(0, 0, 0, .1), inset 0 0.125em 0.5em rgba(0, 0, 0, .15);
 }
+
+#energy_statistic_table,
+#gas_statistic_table {
+    margin-top: 60px;
+}
+
+#chart-container {
+    margin-top: 60px;
+}
+
+.arrow {
+    display:inline-block;
+    *display:inline;
+    cursor: pointer;
+    user-select: none;
+    margin: 0 10px;
+    font-size: 20px;
+}
+
+.right-arrow{
+    float: right;
+}
