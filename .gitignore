@@ -5,6 +5,10 @@ __pycache__/
 .idea/
 secret_key.py
 
+# windows/mac
+**/.DS_Store
+**/.Thumbs.db
+
 # Environments
 .env
 .venv
@@ -90,10 +94,6 @@ ipython_config.py
 # Celery stuff
 celerybeat-schedule
 celerybeat.pid
-
-# mkdocs documentation
-/site
-
 
 # Cython debug symbols
 cython_debug/

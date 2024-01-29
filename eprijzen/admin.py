@@ -11,7 +11,7 @@ class EnergieprijzenAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['country_id', 'date', 'time', 'purchase_price', 'all_in_price' ]
     list_display_links = ['country_id', 'date']
     list_filter = ['date', 'country_id']
-    ordering = ['country_id', 'date', 'time']
+    ordering = ['country_id', '-date', 'time']
     date_hierarchy = 'date'
 
 
@@ -22,7 +22,7 @@ class GasprijzenAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['country_id', 'date', 'time', 'purchase_price', 'all_in_price']
     list_display_links = ['country_id', 'date']
     list_filter = ['date', 'country_id']
-    ordering = ['country_id', 'date', 'time']
+    ordering = ['country_id', '-date', 'time']
     date_hierarchy = 'date'
 
 
