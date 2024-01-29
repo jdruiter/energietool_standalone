@@ -14,11 +14,7 @@ apilogger = logging.getLogger('api-results')
 
 
 def show_energyprices(request):
-    """ Show energy and gas prices for NL
-    Todo Improvements:
-    1. User can select days, weeks, months. The mean of (day|week}month) is graphed in the graph. The min, max and mean are shown in a table.
-    2. User can navigate forward and backwards in time (prev, next day|week|month)
-    """
+    """ Show energy and gas prices for NL """
 
     context = {}
     period = request.GET.get('period', '')
@@ -37,15 +33,15 @@ def show_energyprices(request):
         energyprices = energyprices.filter(date=date.today()-timedelta(days=1))
         gasprices = gasprices.filter(date=date.today()-timedelta(days=1))
     elif period == 'days':
-        # todo take mean of the day
+        # todo take mean of the day instead of single price at 12:00
         energyprices = energyprices.filter(time='12:00')
         gasprices = gasprices.filter(time='12:00')
     elif period == 'weeks':
-        # todo take mean of the week
+        # todo take mean of the week instead of single price at 12:00
         energyprices = energyprices.filter(date__week_day=1, time='12:00')
         gasprices = gasprices.filter(date__week_day=1, time='12:00')
     elif period == 'months':
-        # todo take mean of the month
+        # todo take mean of the month instead of single price at 12:00
         energyprices = energyprices.filter(date__week_day=1, time='12:00')
         gasprices = gasprices.filter(date__week_day=1, time='12:00')
 

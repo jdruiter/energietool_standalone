@@ -15,16 +15,16 @@ STATICFILES_DIRS = [
 ]
 
 
-
 # ---- DEBUG
 VERSION = 'DEBUG'
 DEBUG = True
+
 
 # ---- LIVE
 # VERSION = 'LIVE'
 # DEBUG = False
 # CSRF_COOKIE_SECURE = True     # CSRF cookie only over https
-SESSION_COOKIE_SECURE = True    # session cookie only over https
+# SESSION_COOKIE_SECURE = True    # session cookie only over https
 
 
 ALLOWED_HOSTS = [
@@ -42,11 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'import_export',
+    # 'widget_tweaks', # {% render %}
     'eprijzen',
     'rosetta',
 
 ]
-# extra: widget-tweaks, import-export
 
 
 MIDDLEWARE = [
@@ -167,7 +167,7 @@ LOGGING = {
             'formatter': 'verbose'
         },
         'default': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'logs/default.log',
             'formatter': 'verbose'

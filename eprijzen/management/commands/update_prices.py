@@ -14,73 +14,66 @@ API key: 45ccecb17449e0bfbfbca8c2b6342db63a6a12fd37dcfb18095ba40409a8a926f286390
 740 API tokens
 """
 
-""" Example:
-params = { "user_id": "545589145", "api_key": "45ccecb17449e0bfbfbca8c2b6342db63a6a12fd37dcfb18095ba40409a8a926f286390058efd185978e0ee377b733cc", "country": "NL"}
-params = {
-    "user_id": "545589145",
-    "api_key": "45ccecb17449e0bfbfbca8c2b6342db63a6a12fd37dcfb18095ba40409a8a926f286390058efd185978e0ee377b733cc",
-    "country": "NL",        # NL only
-    "date": "2023-03-01",   #YYYY-MM-DD
-    "todate": "2023-03-02", #YYYY-MM-DD
-}
-res = requests.get('https://api.energieprijzenbot.nl/energy/api/v1.0/ha', params=params).json()
-"""
-
 class Command(BaseCommand):
 
-    help = 'Update energy and gas price tables (NL)' \
-           'python manage.py update_prijzen --periode vandaag|gisteren|morgen|vorige_week|vorige_maand' \
-           'python manage.py update_prijzen --start 2020-01-01 --eind 2020-01-03   (YYYY-MM-DD)'
+    help = 'Update energy and gas price tables' \
+           'Electricity prices available from 2017' \
+           'Gas prices available from 2018 (only NL)' \
+           'python manage.py update_prices --period today|tomorrow|yesterday|prev_week|prev_month' \
+           'python manage.py update_prices --start 2024-01-01 --end 2024-01-31  (YYYY-MM-DD)' \
+           'python manage.py update_prices -c NL -p today' \
 
     def add_arguments(self, parser):
-        parser.add_argument('-s', '--start', type=str, help="Start datum (2020-12-01)")
-        parser.add_argument('-e', '--eind', type=str, help="Eind datum (2020-12-31)")
-        parser.add_argument('-p', '--periode', type=str, help="Periode: vandaag|morgen|gisteren|vorige_week|vorige_maand")
-
+        # parser.add_argument('positional_arg', type=int)
+        parser.add_argument('-s', '--start', type=str, help="Start date (2024-01-01)")
+        parser.add_argument('-e', '--end',   type=str, help="End date (2024-01-31)")
+        parser.add_argument('-p', '--period', type=str, help="Period: today|tomorrow|yesterday|prev_week|prev_month")
+        parser.add_argument('-c', '--country', type=str, default='NL', help="Country (default NL")
 
     def handle(self, *args, **options):
 
-        periode = options['periode']
+        period = options['period']
         start = options['start']
-        eind = options['eind']
+        end = options['end']
+        country = options['country'] or 'NL'
 
-        vandaag = datetime.now()
-        date = vandaag
-        todate = vandaag
+        today = datetime.now()
+        date = today
+        todate = today
 
-        if start and eind:
+        if start and end:
             date = start
-            todate = eind
+            todate = end
 
-        elif start and not eind:
+        elif start and not end:
             date = start
             todate = start
 
-        elif periode:
+        elif period:
 
-            if periode == 'vandaag':
-                date = vandaag.strftime('%Y-%m-%d')
-                todate = vandaag.strftime('%Y-%m-%d')
+            if period == 'today':
+                date = today.strftime('%Y-%m-%d')
+                todate = today.strftime('%Y-%m-%d')
 
-            elif periode == 'morgen':
-                morgen = vandaag + timedelta(days=1)
+            elif period == 'morgen':
+                morgen = today + timedelta(days=1)
                 date = morgen.strftime('%Y-%m-%d')
                 todate = morgen.strftime('%Y-%m-%d')
 
-            elif periode == 'gisteren':
-                gisteren = vandaag - timedelta(days=1)
+            elif period == 'gisteren':
+                gisteren = today - timedelta(days=1)
                 date = gisteren.strftime('%Y-%m-%d')
                 todate = gisteren.strftime('%Y-%m-%d')
 
-            elif periode == 'vorige_week':
-                begin = vandaag - timedelta(days=7)
+            elif period == 'vorige_week':
+                begin = today - timedelta(days=7)
                 date = begin.strftime('%Y-%m-%d')
-                todate = vandaag.strftime('%Y-%m-%d')
+                todate = today.strftime('%Y-%m-%d')
 
-            elif periode == 'vorige_maand':
-                begin = vandaag - timedelta(days=30)
+            elif period == 'vorige_maand':
+                begin = today - timedelta(days=30)
                 date = begin.strftime('%Y-%m-%d')
-                todate = vandaag.strftime('%Y-%m-%d')
+                todate = today.strftime('%Y-%m-%d')
 
         else:
             return print("Need a start and end date to do the query")
@@ -92,7 +85,7 @@ class Command(BaseCommand):
         params = {
             "user_id": "545589145",
             "api_key": "45ccecb17449e0bfbfbca8c2b6342db63a6a12fd37dcfb18095ba40409a8a926f286390058efd185978e0ee377b733cc",
-            "country": "NL",
+            "country": country,
             "date": date,
             "todate": todate
         }
@@ -117,9 +110,8 @@ class Command(BaseCommand):
         print("Energie inkoopprijs:")
         for e in energy:
             # db has time 10:00, json gives 10:00:00
-            # bug: update_or_create and filter() does not find, will insert a new row regardless
-            # date2 = datetime.strptime(day.split('T')[0], '%Y-%m-%d')
-            # time2 = datetime.strptime(day.split('T')[1], '%H:%M:%S').time()
+            # date = datetime.strptime(day.split('T')[0], '%Y-%m-%d')
+            # time = datetime.strptime(day.split('T')[1], '%H:%M:%S').time()
             day = e.get('datetime')
             date = day.split('T')[0]        # 2023-03-10
             time = day.split('T')[1][:5]    # 10:00
