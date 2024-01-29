@@ -29,6 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'localhost',
+    '127.0.0.1',
     'eprijs.nl',
 ]
 
@@ -42,10 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'import_export',
-    # 'widget_tweaks', # {% render %}
-    'eprijzen',
     'rosetta',
-
+    # 'widget_tweaks', # for {% render %}
+    'eprijzen',
 ]
 
 
@@ -162,7 +162,7 @@ LOGGING = {
             'formatter': 'verbose'
         },
         'console': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },

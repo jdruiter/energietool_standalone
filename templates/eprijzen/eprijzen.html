@@ -7,7 +7,7 @@
     <meta name="author" content="Joris de Ruiter">
     <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
 
-    <title>EnergyPrice</title>
+    <title>Energyprice</title>
     <link rel="stylesheet" href="{% static 'libs/bootstrap4/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'eprijzen/eprijzen.css' %}"/>
     <link rel="stylesheet" href="{% static 'libs/datatables/datatables.min.css' %}"/>
@@ -27,7 +27,7 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="/admin/"><Admin></Admin></a></li>
+            <li class="nav-item"><a class="nav-link" href="/admin/">Admin</a></li>
         </ul>
     </div>
 </nav>
@@ -35,10 +35,10 @@
 <main role="main" class="container mt-3" style="margin-bottom:100px">
 
     <div class="jumbotron">
-        <h1>{% trans "Energy and Gas prices" %}</h1><br>
+        <h1>{% trans "Energy and Gas prices (NL)" %}</h1><br>
     </div>
 
-    <form id="get_energieprijzen_for_country" action="" method="GET">
+    <form id="get_energieprices" action="" method="GET">
         <div class="row form-group">
             <div class="col-sm-10 col-lg-6">
                 <select id="period" name="period" class="form-control">
@@ -58,7 +58,8 @@
     {% if energyprices %}
 
     <h1 class="mt-5 mb-2">Energy: NL ({{ period }})</h1>
-    <table id="energie_table" class="table table-striped">
+    <div style="max-width:800px">
+    <table id="energie_table" class="table table-striped table-sm">
         <thead>
         <tr>
             <th>Date</th>
@@ -78,14 +79,16 @@
         {% endfor %}
         </tbody>
     </table>
+    </div>
 
     <section id="chart_energie">
     </section>
     {% endif %}
 
     {% if gasprices %}
+    <div style="max-width:800px">
     <h1 class="mt-5 mb-2">Gas: ({{ period }})</h1>
-    <table id="gas_table" class="table table-striped mt-5 mb-5">
+    <table id="gas_table" class="table table-striped table-sm mt-5 mb-5">
         <thead>
         <tr>
             <th>Date</th>
@@ -105,6 +108,7 @@
         {% endfor %}
         </tbody>
     </table>
+    </div>
 
     <section id="chart_gas">
     </section>
@@ -126,10 +130,18 @@
 
 <script>
     $(document).ready(function () {
-        $('#energie_table').DataTable();
+        $('#energie_table').DataTable( {
+            "pageLength": 12,       // Display 24 rows by default
+            "lengthChange": false,  // Hide the #entries selector
+            "searching": false,
+        } );
     });
     $(document).ready(function () {
-        $('#gas_table').DataTable();
+        $('#gas_table').DataTable({
+            "pageLength": 12,       // Display 24 rows by default
+            "lengthChange": false,  // Hide the #entries selector
+            "searching": false,
+        });
     });
 </script>
 </body>

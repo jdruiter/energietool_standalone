@@ -52,7 +52,7 @@ $python manage.py changepassword
 $python manage.py createsuperuser
 
 # TODO
-1. Check if the data in EnergyPrice and GasPrice tables are complete: every day and every hour should be present
+1. Check if the data in Energyprice and Gasprice tables are complete: every day and every hour should be present
 2. Check the files inside management/commands/ and run some commands to test the API
 
 

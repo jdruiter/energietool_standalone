@@ -1,28 +1,28 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 
-from .models import EnergyPrice, GasPrice
+from .models import Energyprice, Gasprice
 
 
-@admin.register(EnergyPrice)
+@admin.register(Energyprice)
 class EnergieprijzenAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
-    model = EnergyPrice
+    model = Energyprice
     list_display = ['country_id', 'date', 'time', 'purchase_price', 'all_in_price' ]
     list_display_links = ['country_id', 'date']
     list_filter = ['date', 'country_id']
-    ordering = ['country_id', '-date', 'time']
+    # ordering = ['country_id', '-date', 'time']
     date_hierarchy = 'date'
 
 
-@admin.register(GasPrice)
+@admin.register(Gasprice)
 class GasprijzenAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
-    model = EnergyPrice
+    model = Energyprice
     list_display = ['country_id', 'date', 'time', 'purchase_price', 'all_in_price']
     list_display_links = ['country_id', 'date']
     list_filter = ['date', 'country_id']
-    ordering = ['country_id', '-date', 'time']
+    # ordering = ['country_id', '-date', 'time']
     date_hierarchy = 'date'
 
 

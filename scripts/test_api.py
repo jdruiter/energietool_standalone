@@ -23,11 +23,11 @@ f.write(json.dumps(data))
 f.close()
 
 energieprijzen = data.get('e')
-print("EnergyPrice:")
+print("Energyprice:")
 for day in energieprijzen:
     print("{}  {}".format( day.get('datetime'), day.get('purchase_price')))
 
-print("\nGasPrice")
+print("\nGasprice")
 gasprijzen = data.get('g')
 for day in gasprijzen:
     print("{}  {}".format( day.get('datetime'), day.get('purchase_price')))

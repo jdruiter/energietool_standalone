@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='GasPrice',
+            name='Gasprice',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
                 ('country_id', models.CharField(max_length=255, verbose_name='Country (id)')),
@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='EnergyPrice',
+            name='Energyprice',
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
                 ('country_id', models.CharField(max_length=4, verbose_name='Country (id)')),

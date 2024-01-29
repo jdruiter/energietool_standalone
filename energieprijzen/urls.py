@@ -6,9 +6,9 @@ from eprijzen import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('rosetta/', include('rosetta.urls')),
+    path('rosetta/', include('rosetta.urls')),
 
-    path('', views.show_energyprices),
+    path('', views.show_energyprices_nl),
 
     # Update prijzen in db
     # path('update_price/secretstring/<fromdate>/<todate>/', views.api_update_prices), #2023-12-01

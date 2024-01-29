@@ -6,23 +6,25 @@ from django.core.mail import send_mail
 import requests
 import json
 
-from eprijzen.models import EnergyPrice, GasPrice
+from eprijzen.models import Energyprice, Gasprice
 
 import logging
 logger = logging.getLogger('eprijzen')
 apilogger = logging.getLogger('api-results')
 
 
-def show_energyprices(request):
+def show_energyprices_nl(request):
     """ Show energy and gas prices for NL """
 
     context = {}
-    period = request.GET.get('period', '')
-    if not 'period':
+    period = request.GET['period']
+    if not period:
         return render(request, 'eprijzen/eprijzen.html', context)
 
-    energyprices = EnergyPrice.objects.filter(country_id='NL')
-    gasprices = GasPrice.objects.filter(country_id='NL')
+    print(period)
+
+    energyprices = Energyprice.objects.all()
+    gasprices = Gasprice.objects.all()
     if period == 'today':
         energyprices = energyprices.filter(date=date.today())
         gasprices = gasprices.filter(date=date.today())
@@ -46,10 +48,10 @@ def show_energyprices(request):
         gasprices = gasprices.filter(date__week_day=1, time='12:00')
 
     context['period'] = period
-    context['energieprijzen'] = energyprices.order_by('-date', 'time')[:100]
-    context['gasprijzen'] = gasprices.order_by('-date', 'time')[:100]
-    context['energieprijzen_list'] = energyprices.order_by('-date', 'time').values_list('purchase_price', flat=True)[:100]
-    context['gasprijzen_list'] = gasprices.order_by('-date', 'time').values_list('purchase_price', flat=True)[:100]
+    context['energyprices'] = energyprices.order_by('-date', 'time')[:100]
+    context['gasprices'] = gasprices.order_by('-date', 'time')[:100]
+    context['energyprices_list'] = energyprices.order_by('-date', 'time').values_list('purchase_price', flat=True)[:100]
+    context['gasprices_list'] = gasprices.order_by('-date', 'time').values_list('purchase_price', flat=True)[:100]
 
     return render(request, 'eprijzen/eprijzen.html', context)
 
@@ -140,7 +142,7 @@ def api_update_energieprijzen(fromdate, todate):
         purchase_price = e.get('purchase_price')
         extra_fee_price = e.get('extra_fee_price')
         all_in_price = e.get('all_in_price')
-        obj, created = EnergyPrice.objects.update_or_create(country_id='NL', date=date, time=time,
+        obj, created = Energyprice.objects.update_or_create(country_id='NL', date=date, time=time,
                                                                defaults={'purchase_price': round(purchase_price, 4),
                                                                          'extra_fee_price': round(extra_fee_price, 4),
                                                                          'all_in_price': round(all_in_price, 4)})
@@ -154,7 +156,7 @@ def api_update_energieprijzen(fromdate, todate):
         purchase_price = g.get('purchase_price')
         extra_fee_price = g.get('extra_fee_price')
         all_in_price = g.get('all_in_price')
-        obj, created = GasPrice.objects.update_or_create(country_id='NL', date=date, time=time,
+        obj, created = Gasprice.objects.update_or_create(country_id='NL', date=date, time=time,
                                                            defaults={'purchase_price': round(purchase_price, 4),
                                                                      'extra_fee_price': round(extra_fee_price, 4),
                                                                      'all_in_price': round(all_in_price, 4)})

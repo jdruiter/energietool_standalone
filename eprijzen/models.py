@@ -1,14 +1,9 @@
 from django.db import models
 # from django.utils.translation import gettext_lazy as _
 
-GAS_ELECTRA_CHOICES = [
-    ('g', 'gas'), 
-    ('e', 'electricity')
-]
 
-
-class EnergyPrice(models.Model):
-    """ Energieprices 2017 - 2024, mostly NL
+class Energyprice(models.Model):
+    """ Energieprices 2017 - 2024, only NL
     > purchase_price = kale inkoop prijs
     > extra_fee_price is de inkoopprijs met daarbij de door jouw ingesteld (in telegram) inkoopvergoeding en BTW (2022 9% 2022, 2023 21%)
     > all_in_price = inkoopprijs + inkoopvergoeding en ODE + EnergieBelasting (EB) en BTW
@@ -16,7 +11,6 @@ class EnergyPrice(models.Model):
 
     id = models.BigAutoField(primary_key=True)
     country_id = models.CharField("Country (id)", max_length=4)  # NL,EN,DE,..
-    # kind = models.CharField("Kind", max_length=255, choices=GAS_ELECTRA_CHOICES, help_text="e,g")
     objects = models.Manager()
 
     date = models.DateField("Date")
@@ -26,10 +20,15 @@ class EnergyPrice(models.Model):
     all_in_price = models.FloatField("All-in Price", blank=True, null=True, default=None, help_text="Inkoopprijs + inkoopvergoeding + ODE + energiebelasting + BTW")
 
     class Meta:
-        ordering = ['-date']
-        verbose_name = "Energyprice"
-        verbose_name_plural = "Energy prices"
-        index_together = ('date', 'time')
+        ordering = ['country_id', '-date', '-time']
+        verbose_name = "Energyprice (NL)"
+        verbose_name_plural = "Energy prices (NL)"
+        unique_together = ('country_id', 'date', 'time')
+        indexes = [
+            models.Index(fields=['date']),
+            models.Index(fields=['time']),  
+            models.Index(fields=['country_id', 'date', 'time']),  
+        ]
 
     def print_line(self):
         return f"{self.country_id} {self.date} {self.time}: €{self.purchase_price:.2f}"
@@ -38,12 +37,11 @@ class EnergyPrice(models.Model):
         return "{} {} {}".format(self.country_id, self.date.strftime('%Y-%m-%d'), self.time)
 
 
-class GasPrice(models.Model):
+class Gasprice(models.Model):
     """ Gasprices 2018 - 2024, only NL """
 
     id = models.BigAutoField(primary_key=True, serialize=False)
     country_id = models.CharField("Country (id)", max_length=255)
-    # kind = models.CharField("Kind", max_length=255, choices=GAS_ELECTRA_CHOICES)
     objects = models.Manager
 
     date = models.DateField("Date")
@@ -54,9 +52,14 @@ class GasPrice(models.Model):
 
     class Meta:
         ordering = ['-date']
-        verbose_name = "Gas prijs"
-        verbose_name_plural = "Gas prijzen"
-        index_together = ('date', 'time')
+        verbose_name = "Gas price (NL)"
+        verbose_name_plural = "Gas prices (NL)"
+        unique_together = ('country_id', 'date', 'time')
+        indexes = [
+            models.Index(fields=['date']),
+            models.Index(fields=['time']),
+            models.Index(fields=['country_id', 'date', 'time']),
+        ]
 
     def print_line(self):
         return f"{self.country_id} {self.date} {self.time}: €{self.purchase_price:.2f}"
@@ -66,11 +69,8 @@ class GasPrice(models.Model):
 
 
 
-
-""" for later
 class Country(models.Model):
     # Countries: AT, BE, BG, HR, CZ, DE_LU, DK_1, ES, EE, FI, FR, GR, HU, RO, NO_2, PL, PT, CH, NL, SE_3, IE_SEM, IT_NORD
-    
     id = models.AutoField(primary_key=True)
     country_id = models.CharField("Country id", max_length=255, unique=True)
     country_iso = models.CharField("Country ISO", max_length=255, unique=True)
@@ -83,6 +83,68 @@ class Country(models.Model):
         verbose_name = "Land"
         verbose_name_plural = "Landen"
 
+
+class EnergypriceEurope(models.Model):
+    """ Energieprices 2017 - 2024, european countries """
+
+    id = models.BigAutoField(primary_key=True)
+    country_id = models.CharField("Country (id)", max_length=4)  # NL,EN,DE,..
+    objects = models.Manager()
+
+    date = models.DateField("Date")
+    time = models.TimeField("Time")
+    purchase_price = models.FloatField("Purchase Price", null=True, default=None, help_text="Inkoopprijs")
+    extra_fee_price = models.FloatField("Extra Fee Price", blank=True, null=True, default=None, help_text="Inkoopprijs + inkoopvergoeding + BTW")
+    all_in_price = models.FloatField("All-in Price", blank=True, null=True, default=None, help_text="Inkoopprijs + inkoopvergoeding + ODE + energiebelasting + BTW")
+
+    class Meta:
+        ordering = ['country_id', '-date', '-time']
+        verbose_name = "Energyprice (EU)"
+        verbose_name_plural = "Energy prices (EU)"
+        index_together = ('country_id', 'date', 'time')
+        unique_together = ('country_id', 'date', 'time')
+
+    def print_line(self):
+        return f"{self.country_id} {self.date} {self.time}: €{self.purchase_price:.2f}"
+    def str(self):
+        return "{} {} {}".format(self.country_id, self.date.strftime('%Y-%m-%d'), self.time)
+
+
+class GaspriceEurope(models.Model):
+    """ Gasprices 2018 - 2024, European countries """
+
+    id = models.BigAutoField(primary_key=True, serialize=False)
+    country_id = models.CharField("Country (id)", max_length=255)
+    objects = models.Manager
+
+    date = models.DateField("Date")
+    time = models.TimeField("Time")
+    purchase_price = models.FloatField("Purchase Price", null=True, default=None)
+    extra_fee_price = models.FloatField("Extra Fee Price", blank=True, null=True, default=None)
+    all_in_price = models.FloatField("All-in Price", blank=True, null=True, default=None)
+
+    class Meta:
+        ordering = ['-date']
+        verbose_name = "Gas prijs"
+        verbose_name_plural = "Gas prijzen"
+        index_together = ('country_id', 'date', 'time')
+        unique_together = ('country_id', 'date', 'time')
+
+    def print_line(self):
+        return f"{self.country_id} {self.date} {self.time}: €{self.purchase_price:.2f}"
+    def str(self):
+        return "{} {} {}".format(self.country_id, self.date.strftime('%Y-%m-%d'), self.time)
+
+
+
+
+
+""" For later
+
+GAS_ELECTRA_CHOICES = [
+    ('g', 'gas'), 
+    ('e', 'electricity')
+]
 
 class BelastingRegels(models.Model):
     id = models.AutoField(primary_key=True, serialize=False, verbose_name='ID')
