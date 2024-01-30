@@ -24,7 +24,7 @@ DEBUG = True
 # VERSION = 'LIVE'
 # DEBUG = False
 # CSRF_COOKIE_SECURE = True     # CSRF cookie only over https
-SESSION_COOKIE_SECURE = True    # session cookie only over https
+# SESSION_COOKIE_SECURE = True    # session cookie only over https
 
 
 ALLOWED_HOSTS = [
@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'rosetta',
 
 ]
-# extra: widget-tweaks, import-export
 
 
 MIDDLEWARE = [
@@ -99,8 +98,8 @@ LANGUAGE_CODE = 'en-US' # en-US, nl-NL
 LANGUAGES = [
     ('en', 'English'),
     ('nl', 'Nederlands'),
-    ('de', 'Deutsch'),
-    ('fr', 'French'),
+    # ('de', 'Deutsch'),
+    # ('fr', 'French'),
 ]
 
 LOCALE_PATHS = [
