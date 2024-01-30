@@ -44,9 +44,9 @@ INSTALLED_APPS = [
     'django_extensions',
     'import_export',
     'rosetta',
-    # 'widget_tweaks', # for {% render %}
     'eprijzen',
 ]
+# 'widget_tweaks', # for render
 
 
 MIDDLEWARE = [

@@ -1,0 +1,71 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-30 10:02+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/eprijzen/eprijzen.html:27
+msgid "About"
+msgstr ""
+
+#: templates/eprijzen/eprijzen.html:29
+msgid "Giving live energyprices in NL for consumers and companies."
+msgstr ""
+
+#: templates/eprijzen/eprijzen.html:30
+msgid "Contact me to connect your energysystem."
+msgstr ""
+
+#: templates/eprijzen/eprijzen.html:55
+msgid "Energy and Gas prices (NL)"
+msgstr ""
+
+#: templates/eprijzen/eprijzen.html:62
+msgid "Today"
+msgstr ""
+
+#: templates/eprijzen/eprijzen.html:63
+msgid "3 days"
+msgstr ""
+
+#: templates/eprijzen/eprijzen.html:64
+msgid "Last week"
+msgstr ""
+
+#: templates/eprijzen/eprijzen.html:65
+msgid "Last month"
+msgstr ""
+
+#: templates/eprijzen/eprijzen.html:69
+msgid "Get data"
+msgstr ""
+
+#: templates/eprijzen/eprijzen.html:82 templates/eprijzen/eprijzen.html:107
+msgid "Date"
+msgstr ""
+
+#: templates/eprijzen/eprijzen.html:83 templates/eprijzen/eprijzen.html:108
+msgid "Time"
+msgstr ""
+
+#: templates/eprijzen/eprijzen.html:84 templates/eprijzen/eprijzen.html:109
+msgid "Purchase price"
+msgstr ""
+
+#: templates/eprijzen/eprijzen.html:85 templates/eprijzen/eprijzen.html:110
+msgid "All in price"
+msgstr ""
