@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static i18n %}
+<head>
+    <meta charset="UTF-8">
+    <title>Line chart</title>
+
+    <link rel="stylesheet" href="{% static 'libs/apexcharts/apexcharts.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'linechart/linechart.css' %}">
+    <script src="{% static 'libs/apexcharts/apexcharts.min.js' %}"></script>
+</head>
+
+<body>
+
+<!-- hidden form to store month and year -->
+<form id="hidden-form" method="get" action="{% url 'linechart' %}">
+    <input type="text" id="month" name="month">
+    <input type="text" id="year" name="year">
+</form>
+
+
+{% if energy_prices_data %}
+    <div id="arrows">
+        <div id="left-arrow" onclick="timeDelta(-1)">&#x2B9C;</div>
+        <div id="right-arrow" onclick="timeDelta(1)">&#x2B9E;</div>
+    </div>
+
+    <div id ="chart"></div>
+
+    <script>
+        var DataArray = {{ energy_prices_data }};
+        var minValue = DataArray[0][0];
+        var maxValue = DataArray[DataArray.length-1][0];
+
+        console.log(minValue, maxValue);
+        var options = {
+          series: [{
+            name: 'energy price',
+            data: {{ energy_prices_data }}
+          }],
+          chart: {
+            type: 'area',
+            stacked: false,
+            height: 350,
+
+            toolbar: {
+              autoSelected: 'zoom',
+                tools: {
+                pan: false,
+                download: false,
+                selection: false,
+                zoomin: false,
+                zoomout: false,
+                zoom: true,
+            }
+          },
+           zoom: {
+              type: 'x',
+              enabled: true,
+              autoScaleYaxis: true
+            },
+        },
+
+          dataLabels: {
+            enabled: false
+          },
+          markers: {
+            size: 0,
+          },
+          fill: {
+            type: 'gradient',
+            gradient: {
+              shadeIntensity: 1,
+              inverseColors: false,
+              opacityFrom: 0.5,
+              opacityTo: 0,
+              stops: [0, 90, 100]
+            },
+          },
+          yaxis: {
+            title: {
+              text: 'Price'
+            },
+          },
+          stroke: {
+            curve: 'smooth'
+          },
+          xaxis: {
+            type: 'datetime',
+            //min: new Date(minValue).getTime(),
+            //max: new Date(maxValue).getTime(),
+          },
+          tooltip: {
+            shared: false,
+          },
+          title: {
+            text: '{{ month_name }}, {{ year }}',
+            align: 'center',
+            margin: 10,
+            style: {
+              fontSize: '16px'
+            }
+          },
+
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+    </script>
+{% endif %}
+
+<!-- function for the left and right arrows -->
+<script>
+
+    function timeDelta(delta){
+        var given_month = {{ month }};
+        var given_year = {{ year }};
+
+        var month_input = document.getElementById("month");
+        var year_input = document.getElementById("year");
+
+        if (delta === 1){
+            if (given_month === 12) {
+                month_input.value = 1;
+                year_input.value = given_year + 1;
+            }
+            else{
+                month_input.value = given_month + 1;
+                year_input.value = given_year;
+            }
+        }
+        else{
+            if (given_month === 1) {
+                month_input.value = 12;
+                year_input.value = given_year - 1;
+            }
+            else{
+                month_input.value = given_month - 1;
+                year_input.value = given_year;
+            }
+        }
+
+        var form = document.getElementById("hidden-form");
+        form.submit();
+    }
+</script>
+</body>
+</html>

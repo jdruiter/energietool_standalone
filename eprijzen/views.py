@@ -107,7 +107,6 @@ def show_energyprices(request):
         context["energy_prices_data"] = energy_prices_data
         context["gas_prices_data"] = gas_prices_data
 
-
     elif period == 'months':
         year, month = date.split("-")
         year, month = int(year), int(month)
