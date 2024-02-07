@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{% static 'eprijzen/eprijzen.css' %}"/>
     <link rel="stylesheet" href="{% static 'libs/datatables/datatables.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'libs/apexcharts/apexcharts.css' %}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 
     <script src="{% static 'libs/jquery/jquery-3.6.3.min.js' %}"></script>
 
@@ -141,11 +142,13 @@
 
 <!-- Le JavaScript -->
 <script src="{% static 'libs/bootstrap4/js/bootstrap.bundle.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script src="{% static 'libs/datatables/datatables.min.js' %}"></script>
 <script src="{% static 'libs/apexcharts/apexcharts.min.js' %}"></script>
 
 <script>
-    // Show the tables
+    // Show the datatables
     $(document).ready(function () {
         $('#energie_table').DataTable( {
             "pageLength": 12,       // Display 24 rows by default
@@ -163,7 +166,7 @@
         });
     });
 
-    //selectbox show selected one
+    //selectbox show selected option
     $("#period").val( '{{period}}' );
 
 </script>

@@ -7,6 +7,6 @@ from eprijzen import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('rosetta/', include('rosetta.urls')),
-    path('', views.show_energyprices_nl),
+    path('', views.show_energyprices),
 
 ]
