@@ -44,8 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'import_export',
-    'rosetta',
+    #'import_export',
+    #'rosetta',
     'eprijzen',
 ]
 # 'widget_tweaks', # for render

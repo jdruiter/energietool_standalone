@@ -1,9 +1,7 @@
 from django.shortcuts import render
 from eprijzen.models import Energyprice
 from datetime import datetime, date
-
 from pprint import pprint
-import numpy as np
 from django.db.models import Q, IntegerField
 from django.db.models.functions import ExtractMonth
 
