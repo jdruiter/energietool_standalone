@@ -70,7 +70,7 @@ class Command(BaseCommand):
 
         params = {
             "user_id": "545589145",
-            "api_key": "45ccecb17449e0bfbfbca8c2b6342db63a6a12fd37dcfb18095ba40409a8a926f286390058efd185978e0ee377b733cc",
+            "api_key": "04de0f863ecc9f16c22bb4e3356876322079549aabf62ca9c5605b89596e362a616295543d9177afd7cce40afc0a4b4e",
             "country": country,
             "date": date,
             "todate": todate

@@ -14,7 +14,6 @@
 
 <!-- hidden form to store month and year -->
 <form id="hidden-form" method="get" action="{% url 'linechart' %}">
-    {% csrf_token %}
     <input type="text" id="month" name="month">
     <input type="text" id="year" name="year">
 </form>
@@ -29,51 +28,80 @@
     <div id ="chart"></div>
 
     <script>
+        var DataArray = {{ energy_prices_data }};
+        var minValue = DataArray[0][0];
+        var maxValue = DataArray[DataArray.length-1][0];
+
+        console.log(minValue, maxValue);
         var options = {
           series: [{
-          name: 'energy price',
-          data: {{ energy_prices_data }}
-        }],
+            name: 'energy price',
+            data: {{ energy_prices_data }}
+          }],
           chart: {
-          type: 'area',
-          stacked: false,
-          height: 350,
-          zoom: {
-            type: 'x',
-            enabled: true,
-            autoScaleYaxis: true
+            type: 'area',
+            stacked: false,
+            height: 350,
+
+            toolbar: {
+              autoSelected: 'zoom',
+                tools: {
+                pan: false,
+                download: false,
+                selection: false,
+                zoomin: false,
+                zoomout: false,
+                zoom: true,
+            }
           },
-          toolbar: {
-            autoSelected: 'zoom'
-          }
+           zoom: {
+              type: 'x',
+              enabled: true,
+              autoScaleYaxis: true
+            },
         },
-        dataLabels: {
-          enabled: false
-        },
-        markers: {
-          size: 0,
-        },
-        fill: {
-          type: 'gradient',
-          gradient: {
-            shadeIntensity: 1,
-            inverseColors: false,
-            opacityFrom: 0.5,
-            opacityTo: 0,
-            stops: [0, 90, 100]
+
+          dataLabels: {
+            enabled: false
           },
-        },
-        yaxis: {
+          markers: {
+            size: 0,
+          },
+          fill: {
+            type: 'gradient',
+            gradient: {
+              shadeIntensity: 1,
+              inverseColors: false,
+              opacityFrom: 0.5,
+              opacityTo: 0,
+              stops: [0, 90, 100]
+            },
+          },
+          yaxis: {
+            title: {
+              text: 'Price'
+            },
+          },
+          stroke: {
+            curve: 'smooth'
+          },
+          xaxis: {
+            type: 'datetime',
+            //min: new Date(minValue).getTime(),
+            //max: new Date(maxValue).getTime(),
+          },
+          tooltip: {
+            shared: false,
+          },
           title: {
-            text: 'Price'
+            text: '{{ month_name }}, {{ year }}',
+            align: 'center',
+            margin: 10,
+            style: {
+              fontSize: '16px'
+            }
           },
-        },
-        xaxis: {
-          type: 'datetime',
-        },
-        tooltip: {
-          shared: false,
-        }
+
         };
 
         var chart = new ApexCharts(document.querySelector("#chart"), options);
@@ -83,6 +111,7 @@
 
 <!-- function for the left and right arrows -->
 <script>
+
     function timeDelta(delta){
         var given_month = {{ month }};
         var given_year = {{ year }};
@@ -106,7 +135,7 @@
                 year_input.value = given_year - 1;
             }
             else{
-                month_input.value = given_year - 1;
+                month_input.value = given_month - 1;
                 year_input.value = given_year;
             }
         }

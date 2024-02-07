@@ -7,6 +7,7 @@ import numpy as np
 from django.db.models import Q, IntegerField
 from django.db.models.functions import ExtractMonth
 
+months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 def plot_graph(request):
     if request.method == 'GET':
         month = request.GET.get('month')
@@ -19,6 +20,7 @@ def plot_graph(request):
 
     month = int(month)
     year = int(year)
+    month_name = months[month - 1]
 
     energy_prices = Energyprice.objects.filter(
         date__month = month, date__year = year, country_id = "NL"
@@ -31,7 +33,8 @@ def plot_graph(request):
     context = {
         "energy_prices_data":energy_prices_data,
         "month": month,
-        "year": year
+        "year": year,
+        "month_name": month_name,
     }
 
 
