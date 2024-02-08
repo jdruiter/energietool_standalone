@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+{% load static i18n %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Joris de Ruiter">
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
+
+    <title>EnergyPrice</title>
+    <link rel="stylesheet" href="{% static 'libs/bootstrap4/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'eprijzen/eprijzen.css' %}"/>
+    <link rel="stylesheet" href="{% static 'libs/datatables/datatables.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'libs/apexcharts/apexcharts.css' %}"/>
+
+    <script src="{% static 'libs/jquery/jquery-3.6.3.min.js' %}"></script>
+
+    <!-- including datepicker-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+
+    <!-- including moment.js -->
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+    <script src="{% static 'libs/bootstrap4/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'libs/datatables/datatables.min.js' %}"></script>
+    <script src="{% static 'libs/apexcharts/apexcharts.min.js' %}"></script>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <a class="navbar-brand" href="">ePrijs.nl</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="/admin/">Admin</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main role="main" class="container mt-3" style="margin-bottom:100px">
+
+    <div class="jumbotron">
+        <h1>{% trans "Energy and Gas prices" %}</h1><br>
+    </div>
+
+    <form id="get_energieprijzen_for_country" action="{% url 'show_energyprices' %}" method="GET">
+        <div class="row form-group">
+            <div class="col-sm-10 col-lg-6">
+                <select id="period" name="period" class="form-control" onchange="showInputField()">
+                    <option value="days">days</option>
+                    <option value="weeks">weeks</option>
+                    <option value="months">months</option>
+                </select>
+                <div id="dynamicInput" style="margin-top: 10px;"></div>
+            </div>
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-default">Get data</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Energy prices data -->
+    <div class="arrow left-arrow" onclick="dateDelta(-1, '{{ date }}', '{{ period }}')">&#9665;</div>
+    <div class="arrow right-arrow" onclick="dateDelta(1, '{{ date }}', '{{ period }}')">&#9655;</div>
+
+    {% if energy_prices_data %}
+    <div id="energy-chart-container">
+        <script>
+            var energyPricesData = {{ energy_prices_data | safe }};
+
+            var options = {
+                  series: [{
+                  name: 'Energy price',
+                  data: {{ energy_prices_data | safe }}
+                }],
+                  chart: {
+                  type: 'area',
+                  stacked: false,
+                  height: 350,
+                  zoom: {
+                    type: 'x',
+                    enabled: true,
+                    autoScaleYaxis: true
+                  },
+                  toolbar: {
+                    autoSelected: 'zoom'
+                  }
+                },
+                dataLabels: {
+                  enabled: false
+                },
+                markers: {
+                  size: 0,
+                },
+                title: {
+                  text: 'Energy price',
+                  align: 'left'
+                },
+                fill: {
+                  type: 'gradient',
+                  gradient: {
+                    shadeIntensity: 1,
+                    inverseColors: false,
+                    opacityFrom: 0.5,
+                    opacityTo: 0,
+                    stops: [0, 90, 100]
+                  },
+                },
+                xaxis: {
+                  type: 'datetime',
+                },
+                tooltip: {
+                  shared: false,
+                }
+                };
+
+                var chart = new ApexCharts(document.querySelector("#energy-chart-container"), options);
+                chart.render();
+        </script>
+    </div>
+    {% endif %}
+
+
+    <!-- Gas prices data -->
+    {% if gas_prices_data %}
+    <div id="gas-chart-container">
+        <script>
+            var options = {
+                  series: [{
+                  name: 'Gas prices',
+                  data: {{ gas_prices_data | safe }}
+                }],
+                  chart: {
+                  type: 'area',
+                  stacked: false,
+                  height: 350,
+                  zoom: {
+                    type: 'x',
+                    enabled: true,
+                    autoScaleYaxis: true
+                  },
+                  toolbar: {
+                    autoSelected: 'zoom'
+                  }
+                },
+                dataLabels: {
+                  enabled: false
+                },
+                markers: {
+                  size: 0,
+                },
+                title: {
+                  text: 'Gas price',
+                  align: 'left'
+                },
+                fill: {
+                  type: 'gradient',
+                  gradient: {
+                    shadeIntensity: 1,
+                    inverseColors: false,
+                    opacityFrom: 0.5,
+                    opacityTo: 0,
+                    stops: [0, 90, 100]
+                  },
+                },
+                xaxis: {
+                  type: 'datetime',
+                },
+                tooltip: {
+                  shared: false,
+                }
+                };
+
+                var chart = new ApexCharts(document.querySelector("#gas-chart-container"), options);
+                chart.render();
+        </script>
+    </div>
+    {% endif %}
+
+</main>
+
+
+<footer class="footer">
+    <div class="container">
+        <span class="text-center">Copyright: 2024 Joris de Ruiter</span>
+        <span class="text-center text-muted">- Prijzen via eprijzen.nl</span>
+    </div>
+</footer>
+
+<!-- Le JavaScript -->
+<script src="{% static 'libs/bootstrap4/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'libs/datatables/datatables.min.js' %}"></script>
+<script src="{% static 'libs/apexcharts/apexcharts.min.js' %}"></script>
+
+<script>
+    function showInputField(not_selected = true, val = null) {
+          if (not_selected) {
+              var selectedOption = document.getElementById("period").value;
+          } else {
+              var selectedOption = val;
+          }
+
+          var dynamicInput = document.getElementById("dynamicInput");
+
+          if (selectedOption === "days" || selectedOption === "weeks" || selectedOption === "months") {
+
+
+              dynamicInput.innerHTML = "";
+              // creating input field
+              var inputField = document.createElement("input");
+              inputField.type = "text";
+              inputField.name = "date";
+              inputField.id = "dateInput";
+              inputField.className = "form-control";
+              inputField.setAttribute('autocomplete', 'off');
+
+              // datepicker styles for "days" and "weeks"
+              if (selectedOption === "days" || selectedOption === "weeks") {
+                  inputField.classList.add("datepicker-input");
+
+                  $(inputField).datepicker({
+                      format: 'yyyy-mm-dd',
+                      autoclose: true,
+                      show: function () {
+                          $(this).val('');
+                      }
+                  });
+              }
+
+              // datepicker styles for "months"
+              if (selectedOption === "months") {
+                  inputField.classList.add("datepicker-input");
+
+                  $(inputField).datepicker({
+                      format: 'yyyy-mm',
+                      autoclose: true,
+                      show: function () {
+                          $(this).val('');
+                      },
+                      startView: "months",
+                      minViewMode: "months",
+                  });
+              }
+
+              // creating labels
+              var inputLabel = document.createElement("label");
+
+              if (selectedOption === "days"){
+                  inputLabel.textContent = "Enter day";
+              } else if (selectedOption === "weeks"){
+                  inputLabel.textContent = "Enter first day of the week";
+              } else if (selectedOption === "months"){
+                  inputLabel.textContent = "Enter month";
+              }
+
+
+              dynamicInput.appendChild(inputLabel);
+              dynamicInput.appendChild(inputField);
+
+          }
+      }
+
+      {% if period %}
+          var selectedOption = document.getElementById("period");
+          selectedOption.value = "{{ period }}";
+          showInputField(false, "{{ period }}");
+          var dateInput = document.getElementById("dateInput");
+          dateInput = "{{ date }}";
+      {% endif %}
+</script>
+
+<script>
+
+    function dateDelta(delta, date, period){
+        let new_date;
+        let formated_date;
+
+
+        if (period === "days"){
+            new_date = moment(date, "YYYY-MM-DD").add(delta, 'days');
+            formated_date = new_date.format('YYYY-MM-DD');
+        } else if (period === "weeks"){
+            new_date = moment(date, "YYYY-MM-DD").add(delta, 'weeks');
+            formated_date = new_date.format('YYYY-MM-DD');
+        } else if (period === "months"){
+            new_date = moment(date, "YYYY-MM").add(delta, 'months');
+            formated_date = new_date.format('YYYY-MM');
+        }
+
+
+        let dateInput = document.getElementById('dateInput');
+        dateInput.value = formated_date;
+
+        var selectedOption = document.getElementById("period");
+        selectedOption.value = "{{ period }}";
+
+        document.getElementById('get_energieprijzen_for_country').submit();
+    }
+
+</script>
+
+</body>
+</html>

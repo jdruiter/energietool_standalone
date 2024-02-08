@@ -1,11 +1,11 @@
 from django.contrib import admin
-from import_export.admin import ImportExportModelAdmin
+#from import_export.admin import ImportExportModelAdmin
 
 from .models import Energyprice, Gasprice
 
 
 @admin.register(Energyprice)
-class EnergieprijzenAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+class EnergieprijzenAdmin(admin.ModelAdmin):
 
     model = Energyprice
     list_display = ['country_id', 'date', 'time', 'purchase_price', 'all_in_price' ]
@@ -16,7 +16,7 @@ class EnergieprijzenAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
 
 @admin.register(Gasprice)
-class GasprijzenAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+class GasprijzenAdmin(admin.ModelAdmin):
 
     model = Energyprice
     list_display = ['country_id', 'date', 'time', 'purchase_price', 'all_in_price']

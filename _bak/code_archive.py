@@ -10,8 +10,7 @@ logger = logging.getLogger('eprijzen')
 apilogger = logging.getLogger('api-results')
 
 """ 
-API calls from browser
-Unused code
+call energieprijzen API from browser
 """
 
 API_SECRET_STRING = 'updatedb11'
