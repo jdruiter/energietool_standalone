@@ -16,7 +16,7 @@
 <script>
     var Data = [];
     var Colors = [];
-    {% for year, color, year_price, label_val in item_spec %}
+    {% for label, color, month_price, label_val in item_spec %}
         var label_val = {{ label_val | safe }};
 
         var quarter = [];
@@ -29,8 +29,8 @@
         }
 
         var dictionary = {
-                x: "{{year}}",
-                y: {{year_price}},
+                x: "{{label}}",
+                y: {{month_price}},
                 color: "{{color}}",
                 quarters: quarter
             };
@@ -52,7 +52,7 @@
     function updateMonthChart(sourceChart, destChartIDToUpdate) {
         var series = [];
         var seriesIndex = 0;
-        var colors = []
+        var colors = [];
 
         if (sourceChart.w.globals.selectedDataPoints[0]) {
             var selectedPoints = sourceChart.w.globals.selectedDataPoints;
@@ -64,6 +64,7 @@
                     data: yearSeries.data[selectedIndex].quarters
                 })
                 colors.push(yearSeries.data[selectedIndex].color)
+
             }
 
             if (series.length === 0) series = [{

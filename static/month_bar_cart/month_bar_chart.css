@@ -4,15 +4,18 @@
   margin-top: 50px;
 }
 
-#previous-month,
-#next-month {
+#previous-year,
+#next-year {
     white-space: nowrap;
     user-select: none;
 }
 
+#charts {
+    margin-top: 20px;
+}
 
-#previous-month,
-#next-month {
+#previous-year,
+#next-year {
     font-family: 'Arial', sans-serif;
     font-weight: bold;
     font-size: 16px;
@@ -21,12 +24,11 @@
 }
 
 
-#previous-month:hover,
-#next-month:hover {
+#previous-year:hover,
+#next-year:hover {
     color: #504f4f;
 }
 
 #hidden-form {
     display: none;
 }
-

@@ -20,9 +20,9 @@
 
 
 {% if energy_prices_data %}
-    <div id="arrows">
-        <div id="left-arrow" onclick="timeDelta(-1)">&#x2B9C;</div>
-        <div id="right-arrow" onclick="timeDelta(1)">&#x2B9E;</div>
+    <div id="navigation">
+        <div id="previous-month" onclick="timeDelta(-1)">previous month</div>
+        <div id="next-month" onclick="timeDelta(1)">next month</div>
     </div>
 
     <div id ="chart"></div>

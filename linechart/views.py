@@ -7,7 +7,7 @@ import numpy as np
 from django.db.models import Q, IntegerField
 from django.db.models.functions import ExtractMonth
 
-months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 def plot_graph(request):
     if request.method == 'GET':
         month = request.GET.get('month')

@@ -6,7 +6,7 @@
     <title>Week chart</title>
 
     <link rel="stylesheet" href="{% static 'libs/apexcharts/apexcharts.css' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'week_bar_cart/week_bar_chart.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'month_bar_cart/month_bar_chart.css' %}">
     <script src="{% static 'libs/apexcharts/apexcharts.min.js' %}"></script>
 </head>
 <body>
@@ -29,11 +29,20 @@
     {% endfor %}
 </script>
 
+<!-- hidden form to store year -->
+<form id="hidden-form" method="get" action="{% url 'month_bar_chart' %}">
+    <input type="text" id="year" name="year">
+</form>
 
+
+<div id="navigation">
+    <div id="previous-year" onclick="timeDelta(-1)">previous year</div>
+    <div id="next-year" onclick="timeDelta(1)">next year</div>
+</div>
 
 
 <!-- charts -->
-    <div style="display: flex;">
+    <div style="display: flex;" id="charts">
         <div id="chart-year"></div>
         <div id="chart-quarter"></div>
     </div>
@@ -133,12 +142,18 @@
           }
         },
         title: {
-          text: 'Weekly Results',
-          offsetX: 15
+          text: 'Monthly results for {{ year }}',
+          offsetX: 15,
+          style: {
+              fontSize:  '20px',
+            },
         },
         subtitle: {
           text: '(Click on bar to see details)',
-          offsetX: 15
+          offsetX: 15,
+          style: {
+              fontSize:  '16px',
+            },
         },
         yaxis: {
           labels: {
@@ -211,6 +226,19 @@
             updateMonthChart(chart, 'barQuarter')
       })
     </script>
+
+
+<!-- function for the left and right arrows -->
+<script>
+
+    function timeDelta(delta){
+        var given_year = {{ year }};
+        var year_input = document.getElementById("year");
+        year_input.value = given_year + delta;
+        var form = document.getElementById("hidden-form");
+        form.submit();
+    }
+</script>
 
 </body>
 </html>

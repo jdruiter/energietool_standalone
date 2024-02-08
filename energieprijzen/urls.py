@@ -10,5 +10,5 @@ urlpatterns = [
     path('', views.show_energyprices_nl),
     path('linechart/', include("linechart.urls")),
     path('barchart/', include("barchart.urls")),
-    path('weekchart/', include("week_bar_chart.urls")),
+    path('monthchart/', include("month_bar_chart.urls")),
 ]

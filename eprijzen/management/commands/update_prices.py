@@ -24,7 +24,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('period', nargs='?', type=str, help="Period: today|3day|prev_week|prev_month")
-        # parser.add_argument('-p', '--period', type=str, help="Period: today|3day|prev_week|prev_month")
+        parser.add_argument('-p', '--period', type=str, help="Period: today|3day|prev_week|prev_month")
         parser.add_argument('-c', '--country', type=str, default='NL', help="Country (default NL")
         parser.add_argument('-s', '--start', type=str, help="Start date (2024-01-01)")
         parser.add_argument('-e', '--end',   type=str, help="End date (2024-01-31)")
@@ -65,8 +65,8 @@ class Command(BaseCommand):
             else:
                 return print("Need a valid period for the query")
 
-        print("From: " + date)
-        print("To: " + todate)
+
+
 
         params = {
             "user_id": "545589145",
