@@ -8,13 +8,16 @@ from eprijzen.models import Energyprice, Gasprice, EnergypriceEurope, GaspriceEu
 import logging
 logger = logging.getLogger('management-commands')
 
-"""Telegram:
+"""Telegram eprijzen bot:
 @knightpoint: 545589145
 API key: 45ccecb17449e0bfbfbca8c2b6342db63a6a12fd37dcfb18095ba40409a8a926f286390058efd185978e0ee377b733cc
-740 API tokens
+@nazar: ..
+API key: ...
 """
 
 class Command(BaseCommand):
+    API_USER_ID = "545589145"
+    API_KEY = "45ccecb17449e0bfbfbca8c2b6342db63a6a12fd37dcfb18095ba40409a8a926f286390058efd185978e0ee377b733cc"
 
     help = 'Update energy and gas price tables' \
            'Electricity prices available from 2017,' \
@@ -23,8 +26,7 @@ class Command(BaseCommand):
            'python manage.py update_prices -c NL --start 2024-01-01 --end 2024-01-31  (YYYY-MM-DD)'
 
     def add_arguments(self, parser):
-        parser.add_argument('period', nargs='?', type=str, help="Period: today|3day|prev_week|prev_month")
-        # parser.add_argument('-p', '--period', type=str, help="Period: today|3day|prev_week|prev_month")
+        parser.add_argument('-p', '--period', type=str, help="Period: today|3day|prev_week|prev_month")
         parser.add_argument('-c', '--country', type=str, default='NL', help="Country (default NL")
         parser.add_argument('-s', '--start', type=str, help="Start date (2024-01-01)")
         parser.add_argument('-e', '--end',   type=str, help="End date (2024-01-31)")
@@ -33,16 +35,14 @@ class Command(BaseCommand):
 
         country = options['country'] or 'NL'
         period = options['period']
-        start = options['start']
-        end = options['end']
+        start = options['start'] or None
+        end = options['end'] or None
 
         today = datetime.now()
 
+        date, todate = None, None
         if start and end:
             date, todate = start, end
-
-        elif start:
-            date, todate = start, start
 
         elif period:
 
@@ -66,11 +66,11 @@ class Command(BaseCommand):
                 return print("Need a valid period for the query")
 
         print("From: " + date)
-        print("To: " + todate)
+        print("To:   " + todate)
 
         params = {
-            "user_id": "545589145",
-            "api_key": "04de0f863ecc9f16c22bb4e3356876322079549aabf62ca9c5605b89596e362a616295543d9177afd7cce40afc0a4b4e",
+            "user_id": self.API_USER_ID,
+            "api_key": self.API_KEY,
             "country": country,
             "date": date,
             "todate": todate

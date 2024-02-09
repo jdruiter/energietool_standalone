@@ -23,18 +23,20 @@ def show_energyprices_joris(request):
     if not period:
         return render(request, 'eprijzen/eprijzen.html', context)
 
-    today = datetime.today()
+    today = date.today()
     tomorrow = today+timedelta(days=1)
     yesterday = today-timedelta(days=1)
+    print(yesterday, '\n', today, '\n', tomorrow)
 
-    energyprices = Energyprice.objects.all()
-    gasprices = Gasprice.objects.all()
+    energyprices, gasprices = None, None
     if period == 'today':
-        energyprices = energyprices.filter(date=date.today())
-        gasprices = gasprices.filter(date=date.today())
-    elif period == '3days':
-        energyprices = energyprices.filter(date__range=[yesterday, tomorrow])
-        gasprices = gasprices.filter(date__range=[yesterday, tomorrow])
+        energyprices = Energyprice.objects.filter(date=date.today())
+        gasprices = Gasprice.objects.filter(date=date.today())
+
+    # elif period == '3day':
+    #     energyprices = Energyprice.objects.filter(date__range=[yesterday, tomorrow])
+    #     gasprices = Gasprice.objects.filter(date__range=[yesterday, tomorrow])
+
     elif period == 'days':
         # todo take mean of the day instead of single price at 12:00
         energyprices = energyprices.filter(time='12:00')
@@ -48,11 +50,14 @@ def show_energyprices_joris(request):
         energyprices = energyprices.filter(date__week_day=1, time='12:00')
         gasprices = gasprices.filter(date__week_day=1, time='12:00')
 
+    print(energyprices)
+    print(gasprices)
+
     context['period'] = period
-    context['energyprices'] = energyprices.order_by('-date', 'time')[:100]
-    context['gasprices'] = gasprices.order_by('-date', 'time')[:100]
-    context['energyprices_list'] = energyprices.order_by('-date', 'time').values_list('purchase_price', flat=True)[:100]
-    context['gasprices_list'] = gasprices.order_by('-date', 'time').values_list('purchase_price', flat=True)[:100]
+    context['energyprices'] = energyprices.order_by('-date', 'time') if energyprices else None
+    context['gasprices'] = gasprices.order_by('-date', 'time') if gasprices else None
+    # context['energyprices_list'] = energyprices.order_by('-date', 'time').values_list('purchase_price', flat=True)[0:100]
+    # context['gasprices_list'] = gasprices.order_by('-date', 'time').values_list('purchase_price', flat=True)[0:100]
 
     return render(request, 'eprijzen/eprijzen.html', context)
 
@@ -61,7 +66,7 @@ def show_energyprices_joris(request):
 def show_energyprices(request):
     """ Show energy and gas prices for NL
     Todo Improvements:
-    1. User can select days, weeks, months. The mean of (day|week}month) is graphed in the graph. The min, max and mean are shown in a table.
+    1. User can select days, weeks, months. The mean of (day|week}month) is graphed in the graph.
     2. User can navigate forward and backwards in time (prev, next day|week|month)
     """
 
