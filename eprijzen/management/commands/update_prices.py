@@ -14,6 +14,12 @@ API key: 45ccecb17449e0bfbfbca8c2b6342db63a6a12fd37dcfb18095ba40409a8a926f286390
 740 API tokens
 """
 
+# Nazar's user_id and API token
+"""
+@Kozaknazar: 424718795
+API key: 9f8ff82d85848a5d4002b102aaefa70d46feea779297d29fb927e61797f84f29b775188b07b56f21d83e0920b2c4b35f
+"""
+
 class Command(BaseCommand):
 
     help = 'Update energy and gas price tables' \
@@ -24,7 +30,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('period', nargs='?', type=str, help="Period: today|3day|prev_week|prev_month")
-        parser.add_argument('-p', '--period', type=str, help="Period: today|3day|prev_week|prev_month")
+        #parser.add_argument('-p', '--period', type=str, help="Period: today|3day|prev_week|prev_month")
         parser.add_argument('-c', '--country', type=str, default='NL', help="Country (default NL")
         parser.add_argument('-s', '--start', type=str, help="Start date (2024-01-01)")
         parser.add_argument('-e', '--end',   type=str, help="End date (2024-01-31)")
@@ -69,8 +75,8 @@ class Command(BaseCommand):
 
 
         params = {
-            "user_id": "545589145",
-            "api_key": "04de0f863ecc9f16c22bb4e3356876322079549aabf62ca9c5605b89596e362a616295543d9177afd7cce40afc0a4b4e",
+            "user_id": "424718795",
+            "api_key": "9f8ff82d85848a5d4002b102aaefa70d46feea779297d29fb927e61797f84f29b775188b07b56f21d83e0920b2c4b35f",
             "country": country,
             "date": date,
             "todate": todate

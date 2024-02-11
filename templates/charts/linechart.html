@@ -29,10 +29,6 @@
 
     <script>
         var DataArray = {{ energy_prices_data }};
-        var minValue = DataArray[0][0];
-        var maxValue = DataArray[DataArray.length-1][0];
-
-        console.log(minValue, maxValue);
         var options = {
           series: [{
             name: 'energy price',
@@ -87,8 +83,6 @@
           },
           xaxis: {
             type: 'datetime',
-            //min: new Date(minValue).getTime(),
-            //max: new Date(maxValue).getTime(),
           },
           tooltip: {
             shared: false,

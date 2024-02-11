@@ -8,6 +8,7 @@ from pprint import pprint
 
 months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
+# random colors for graph
 def generate_random_color():
     color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
     return color
@@ -63,5 +64,5 @@ def plot_graph(request):
     context = {
         "item_spec": item_spec
     }
-"""
+    """
     return render(request, 'charts/month_bar_chart.html', context)

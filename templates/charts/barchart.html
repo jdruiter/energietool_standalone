@@ -48,7 +48,7 @@
     <script>
 
 
-
+    // function for updating parameters
     function updateMonthChart(sourceChart, destChartIDToUpdate) {
         var series = [];
         var seriesIndex = 0;
@@ -81,7 +81,7 @@
         }
     }
 
-
+    // options for left bar chart
          var options = {
           series: [{
           data: Data
@@ -163,6 +163,7 @@
         var chart = new ApexCharts(document.querySelector("#chart-year"), options);
         chart.render();
 
+    // options for right bar chart
         var optionsQuarter = {
           series: [{
           data: []
@@ -217,6 +218,9 @@
               }
             }
           }
+        },
+        theme: {
+            palette: "palette1", // You can choose a different palette (palette1 to palette10)
         }
         };
 
@@ -231,11 +235,6 @@
       chart.addEventListener('updated', function (chart) {
             updateMonthChart(chart, 'barQuarter')
       })
-
-
-
-
-
 
     </script>
 </body>
