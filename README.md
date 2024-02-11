@@ -48,6 +48,11 @@ Prijzen:
 * extra_fee_price = kale inkoopprijs met daarbij de door jouw ingesteld (in telegram) inkoopvergoeding en BTW (2022 9% 2022, 2023 21%)
 * all_in_price = inkoopprijs + inkoopvergoeding en ODE + EnergieBelasting (EB) en BTW (nu 9% 2022 en 2023 21%)
 
+# Info (EN)
+* purchase_price = what energy company pays
+* extra_fee_price = price + taxes
+* all_in_price = price + taxes + more taxes  (what consumers will pay)
+
 
 *Opslag* bij dynamische energieleveranciers is een toeslag bovenop de kostprijs van energie. Het is een manier voor leveranciers om de prijsschommelingen en risico’s die gepaard gaan met de inkoop van energie op de 
 markt te dekken. Dit bedrag kan variëren afhankelijk van de marktsituatie en het beleid van de leverancier.

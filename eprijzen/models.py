@@ -27,7 +27,8 @@ class Energyprice(models.Model):
         indexes = [
             models.Index(fields=['date']),
             models.Index(fields=['time']),  
-            models.Index(fields=['country_id', 'date', 'time']),  
+            models.Index(fields=['date', 'time']),
+            models.Index(fields=['country_id', 'date', 'time']),
         ]
 
     def print_line(self):
@@ -41,7 +42,7 @@ class Gasprice(models.Model):
     """ Gasprices 2018 - 2024, only NL """
 
     id = models.BigAutoField(primary_key=True, serialize=False)
-    country_id = models.CharField("Country (id)", max_length=255)
+    country_id = models.CharField("Country (id)", max_length=4) #NL, BE, De
     objects = models.Manager
 
     date = models.DateField("Date")
@@ -58,6 +59,7 @@ class Gasprice(models.Model):
         indexes = [
             models.Index(fields=['date']),
             models.Index(fields=['time']),
+            models.Index(fields=['date', 'time']),
             models.Index(fields=['country_id', 'date', 'time']),
         ]
 
@@ -68,6 +70,8 @@ class Gasprice(models.Model):
         return "{} {} {}".format(self.country_id, self.date.strftime('%Y-%m-%d'), self.time)
 
 
+
+""" For later 
 
 class Country(models.Model):
     # Countries: AT, BE, BG, HR, CZ, DE_LU, DK_1, ES, EE, FI, FR, GR, HU, RO, NO_2, PL, PT, CH, NL, SE_3, IE_SEM, IT_NORD
@@ -83,63 +87,6 @@ class Country(models.Model):
         verbose_name = "Land"
         verbose_name_plural = "Landen"
 
-
-class EnergypriceEurope(models.Model):
-    """ Energieprices 2017 - 2024, european countries """
-
-    id = models.BigAutoField(primary_key=True)
-    country_id = models.CharField("Country (id)", max_length=4)  # NL,EN,DE,..
-    objects = models.Manager()
-
-    date = models.DateField("Date")
-    time = models.TimeField("Time")
-    purchase_price = models.FloatField("Purchase Price", null=True, default=None, help_text="Inkoopprijs")
-    extra_fee_price = models.FloatField("Extra Fee Price", blank=True, null=True, default=None, help_text="Inkoopprijs + inkoopvergoeding + BTW")
-    all_in_price = models.FloatField("All-in Price", blank=True, null=True, default=None, help_text="Inkoopprijs + inkoopvergoeding + ODE + energiebelasting + BTW")
-
-    class Meta:
-        ordering = ['country_id', '-date', '-time']
-        verbose_name = "Energyprice (EU)"
-        verbose_name_plural = "Energy prices (EU)"
-        index_together = ('country_id', 'date', 'time')
-        unique_together = ('country_id', 'date', 'time')
-
-    def print_line(self):
-        return f"{self.country_id} {self.date} {self.time}: €{self.purchase_price:.2f}"
-    def str(self):
-        return "{} {} {}".format(self.country_id, self.date.strftime('%Y-%m-%d'), self.time)
-
-
-class GaspriceEurope(models.Model):
-    """ Gasprices 2018 - 2024, European countries """
-
-    id = models.BigAutoField(primary_key=True, serialize=False)
-    country_id = models.CharField("Country (id)", max_length=255)
-    objects = models.Manager
-
-    date = models.DateField("Date")
-    time = models.TimeField("Time")
-    purchase_price = models.FloatField("Purchase Price", null=True, default=None)
-    extra_fee_price = models.FloatField("Extra Fee Price", blank=True, null=True, default=None)
-    all_in_price = models.FloatField("All-in Price", blank=True, null=True, default=None)
-
-    class Meta:
-        ordering = ['-date']
-        verbose_name = "Gas prijs"
-        verbose_name_plural = "Gas prijzen"
-        index_together = ('country_id', 'date', 'time')
-        unique_together = ('country_id', 'date', 'time')
-
-    def print_line(self):
-        return f"{self.country_id} {self.date} {self.time}: €{self.purchase_price:.2f}"
-    def str(self):
-        return "{} {} {}".format(self.country_id, self.date.strftime('%Y-%m-%d'), self.time)
-
-
-
-
-
-""" For later
 
 GAS_ELECTRA_CHOICES = [
     ('g', 'gas'), 
@@ -221,6 +168,7 @@ class BelastingPerDag(models.Model):
         verbose_name = "Belasting per dag"
         verbose_name_plural = "Belastingen per dag"
 """
+
 
 """ Examples
  poolbuilder = models.ForeignKey(PoolBuilder, on_delete=models.SET_NULL, null=True, related_name='pools')

@@ -6,107 +6,121 @@
     <title>Line chart</title>
 
     <link rel="stylesheet" href="{% static 'libs/apexcharts/apexcharts.css' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'linechart/linechart.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'eprijzen/eprijzen.css' %}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <script src="{% static 'libs/apexcharts/apexcharts.min.js' %}"></script>
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
 </head>
 
 <body>
 
 <!-- hidden form to store month and year -->
 <form id="hidden-form" method="get" action="{% url 'linechart' %}">
-    <input type="text" id="month" name="month">
-    <input type="text" id="year" name="year">
+    <input type="hidden" id="month" name="month">
+    <input type="hidden" id="year" name="year">
 </form>
 
+<div class="container jumbotron" style="text-align:center">
+    <h1>{% trans "Energy prices (NL)" %}</h1>
+    <p>{% trans "Zoomable: use your mouse to zoom into the chart." %}</p>
+    <p><small>{% trans "Prices incl. all taxes (ODE, EB and BTW)" %}</small></p>
+</div>
+
+<div id="navigation" class="code-style">
+    <div id="previous-month" onclick="timeDelta(-1)"><i class="bi bi-chevron-double-left"></i> previous month</div>
+    <div id="next-month" onclick="timeDelta(1)">next month <i class="bi bi-chevron-double-right"></i></div>
+</div>
 
 {% if energy_prices_data %}
-    <div id="arrows">
-        <div id="left-arrow" onclick="timeDelta(-1)">&#x2B9C;</div>
-        <div id="right-arrow" onclick="timeDelta(1)">&#x2B9E;</div>
-    </div>
 
-    <div id ="chart"></div>
+<div id="chart"></div>
 
-    <script>
-        var DataArray = {{ energy_prices_data }};
-        var minValue = DataArray[0][0];
-        var maxValue = DataArray[DataArray.length-1][0];
+<script>
 
-        console.log(minValue, maxValue);
-        var options = {
-          series: [{
-            name: 'energy price',
-            data: {{ energy_prices_data }}
-          }],
-          chart: {
-            type: 'area',
-            stacked: false,
-            height: 350,
+    let energy_prices_data = {{energy_prices_data|safe}};
 
-            toolbar: {
-              autoSelected: 'zoom',
-                tools: {
-                pan: false,
-                download: false,
-                selection: false,
-                zoomin: false,
-                zoomout: false,
-                zoom: true,
-            }
-          },
-           zoom: {
-              type: 'x',
-              enabled: true,
-              autoScaleYaxis: true
-            },
+    let DataArray = energy_prices_data;
+    let minValue = DataArray[0][0];
+    let maxValue = DataArray[DataArray.length-1][0];
+    console.log('Min: ', new Date(minValue));
+    console.log('Max: ', new Date(maxValue));
+    //console.log(energy_prices_data);
+
+    var options = {
+      series: [{
+        name: 'energy price',
+        data: energy_prices_data
+      }],
+      chart: {
+        type: 'area',
+        stacked: false,
+        height: 350,
+
+        toolbar: {
+          autoSelected: 'zoom',
+            tools: {
+            pan: false,
+            download: false,
+            selection: false,
+            zoomin: false,
+            zoomout: false,
+            zoom: true,
+        }
+      },
+       zoom: {
+          type: 'x',
+          enabled: true,
+          autoScaleYaxis: true
         },
+    },
 
-          dataLabels: {
-            enabled: false
-          },
-          markers: {
-            size: 0,
-          },
-          fill: {
-            type: 'gradient',
-            gradient: {
-              shadeIntensity: 1,
-              inverseColors: false,
-              opacityFrom: 0.5,
-              opacityTo: 0,
-              stops: [0, 90, 100]
-            },
-          },
-          yaxis: {
-            title: {
-              text: 'Price'
-            },
-          },
-          stroke: {
-            curve: 'smooth'
-          },
-          xaxis: {
-            type: 'datetime',
-            //min: new Date(minValue).getTime(),
-            //max: new Date(maxValue).getTime(),
-          },
-          tooltip: {
-            shared: false,
-          },
-          title: {
-            text: '{{ month_name }}, {{ year }}',
-            align: 'center',
-            margin: 10,
-            style: {
-              fontSize: '16px'
-            }
-          },
+      dataLabels: {
+        enabled: false
+      },
+      markers: {
+        size: 0,
+      },
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shadeIntensity: 1,
+          inverseColors: false,
+          opacityFrom: 0.5,
+          opacityTo: 0,
+          stops: [0, 90, 100]
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'Price'
+        },
+      },
+      stroke: {
+        curve: 'smooth'
+      },
+      xaxis: {
+        type: 'datetime',
+        //min: new Date(minValue).getTime(),
+        //max: new Date(maxValue).getTime(),
+      },
+      tooltip: {
+        shared: false,
+      },
+      title: {
+        text: '{{ month_name }}, {{ year }}',
+        align: 'center',
+        margin: 10,
+        style: {
+          fontSize: '16px'
+        }
+      },
 
-        };
+    };
 
-        var chart = new ApexCharts(document.querySelector("#chart"), options);
-        chart.render();
-    </script>
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();
+</script>
 {% endif %}
 
 <!-- function for the left and right arrows -->

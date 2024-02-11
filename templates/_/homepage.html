@@ -5,17 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="author" content="Joris de Ruiter">
-    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
-
     <title>Energyprice</title>
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
     <link rel="stylesheet" href="{% static 'libs/bootstrap4/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'eprijzen/eprijzen.css' %}"/>
-    <link rel="stylesheet" href="{% static 'libs/datatables/datatables.min.css' %}"/>
-<!--    <link rel="stylesheet" href="{% static 'libs/apexcharts/apexcharts.css' %}"/>-->
-<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">-->
-
     <script src="{% static 'libs/jquery/jquery-3.6.3.min.js' %}"></script>
-
+    <!--    <link rel="stylesheet" href="{% static 'libs/datatables/datatables.min.css' %}"/>-->
+    <!--    <link rel="stylesheet" href="{% static 'libs/apexcharts/apexcharts.css' %}"/>-->
 </head>
 
 <body>
@@ -42,7 +38,7 @@
     </div>
     <div class="navbar navbar-dark bg-dark shadow-sm">
         <div class="container">
-            <a href="#" class="navbar-brand d-flex align-items-center">ePrijs.nl</a>
+            <a href="#" class="navbar-brand">ePrijs.nl</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="true" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -56,21 +52,30 @@
         <h1>{% trans "Energy and Gas prices (NL)" %}</h1><br>
     </div>
 
-    <form id="get_energieprices" action="" method="GET">
-        <div class="row form-group">
-            <div class="col-sm-10 col-lg-6">
-                <select id="period" name="period" class="form-control">
-                    <option value="today">{% trans "Today" %}</option>
-                    <option value="days">{% trans "Days" %}</option>
-                    <option value="weeks">{% trans "Weeks" %}</option>
-                    <option value="months">{% trans "Months" %}</option>
-                </select>
+    <h1 style="font-size:20px">Charts:</h1>
+    <ul class="nav nav-pills nav-fill">
+        <li><a class='nav-link' href="/linechart">Linechart (zoomable)</a></li>
+        <li><a class='nav-link' href="/weekchart">Week chart</a></li>
+        <li><a class='nav-link' href="/monthchart">Month chart</a></li>
+        <li><a class='nav-link' href="/yearchart">Year chart</a></li>
+    </ul>
+
+
+        <form id="get_energieprices" action="" method="GET">
+            <div class="row form-group">
+                <div class="col-sm-10 col-lg-6">
+                    <select id="period" name="period" class="form-control">
+                        <option value="today">{% trans "Today" %}</option>
+                        <option value="days">{% trans "Days" %}</option>
+                        <option value="weeks">{% trans "Weeks" %}</option>
+                        <option value="months">{% trans "Months" %}</option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-default">{% trans "Get data" %}</button>
+                </div>
             </div>
-            <div class="col-sm-2">
-                <button type="submit" class="btn btn-default">{% trans "Get data" %}</button>
-            </div>
-        </div>
-    </form>
+        </form>
 
     {% if energyprices or gasprices %}
     <div class="row">
@@ -141,14 +146,13 @@
 </footer>
 
 <!-- Le JavaScript -->
-<script src="{% static 'libs/bootstrap4/js/bootstrap.bundle.min.js' %}"></script>
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>-->
+<script src="{% static 'libs/bootstrap4/js/bootstrap.min.js' %}"></script>
 <!--<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>-->
-<script src="{% static 'libs/datatables/datatables.min.js' %}"></script>
+<!--<script src="{% static 'libs/datatables/datatables.min.js' %}"></script>-->
 <!--<script src="{% static 'libs/apexcharts/apexcharts.min.js' %}"></script>-->
 
 <script>
-    // Show the datatables
+    /* Show the datatables
     $(document).ready(function () {
         $('#energy_table').DataTable( {
             "pageLength": 12,       // Display 24 rows by default
@@ -168,7 +172,7 @@
 
     //selectbox show selected option
     $("#period").val( '{{period}}' );
-
+    */
 </script>
 </body>
 </html>

@@ -15,6 +15,23 @@
 </nav>
 
 
+<!-- bootstrap tabs to switch between graphs -->
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab">Home</a>
+            <a class="nav-item nav-link" id="weekchart-tab" data-toggle="tab" href="#nav-weekchart" role="tab">Weekchart</a>
+            <a class="nav-item nav-link" id="monthchart-tab" data-toggle="tab" href="#nav-monthchart" role="tab">Month chart</a>
+            <a class="nav-item nav-link" id="yearchart-tab" data-toggle="tab" href="#nav-yearchart" role="tab">Year chart</a>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">Home</div>
+        <div class="tab-pane fade" id="nav-weekchart" role="tabpanel">Week chart</div>
+        <div class="tab-pane fade" id="nav-monthchart" role="tabpanel">Month chart</div>
+        <div class="tab-pane fade" id="nav-yearchart" role="tabpanel">Year chart</div>
+    </div>
+
+
 <header>
     <div class="bg-dark collapse navbar-collapse hide" id="navbarCollapse" style="">
         <div class="container">

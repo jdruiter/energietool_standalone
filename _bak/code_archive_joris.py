@@ -9,12 +9,54 @@ import logging
 logger = logging.getLogger('eprijzen')
 apilogger = logging.getLogger('api-results')
 
+
+
+def show_energyprices_joris(request):
+    """ Show energy and gas prices for NL """
+
+    context = {}
+    period = request.GET.get('period')
+    if not period:
+        return render(request, 'eprijzen/eprijzen.html', context)
+
+    today = date.today()
+    energyprices, gasprices = None, None
+    if period == 'today':
+        energyprices = Energyprice.objects.filter(date=date.today())
+        gasprices = Gasprice.objects.filter(date=date.today())
+
+    elif period == 'days':
+        # todo take mean of the day instead of single price at 12:00
+        energyprices = energyprices.filter(time='12:00')
+        gasprices = gasprices.filter(time='12:00')
+    elif period == 'weeks':
+        # todo take mean of the week instead of single price at 12:00
+        energyprices = energyprices.filter(date__week_day=1, time='12:00')
+        gasprices = gasprices.filter(date__week_day=1, time='12:00')
+    elif period == 'months':
+        # todo take mean of the month instead of single price at 12:00
+        energyprices = energyprices.filter(date__week_day=1, time='12:00')
+        gasprices = gasprices.filter(date__week_day=1, time='12:00')
+
+    print(energyprices)
+    print(gasprices)
+
+    context['period'] = period
+    context['energyprices'] = energyprices.order_by('-date', 'time') if energyprices else None
+    context['gasprices'] = gasprices.order_by('-date', 'time') if gasprices else None
+    # context['energyprices_list'] = energyprices.order_by('-date', 'time').values_list('purchase_price', flat=True)[0:100]
+    # context['gasprices_list'] = gasprices.order_by('-date', 'time').values_list('purchase_price', flat=True)[0:100]
+
+    return render(request, 'eprijzen/eprijzen.html', context)
+
+
+
+
 """ 
 call energieprijzen API from browser
 """
 
 API_SECRET_STRING = 'updatedb11'
-
 def update_period(request, secretstring, periode):
     # Makes API call to update the database
 
