@@ -41,6 +41,7 @@
 
 
 <script>
+    // function for updating chart options
     function updateMonthChart(sourceChart, destChartIDToUpdate) {
         var series = [];
         var seriesIndex = 0;
@@ -67,7 +68,6 @@
             })
         }
     }
-
 
     var options = {
         series: [{
@@ -156,10 +156,11 @@
     var chart = new ApexCharts(document.querySelector("#chart-year"), options);
     chart.render();
 
-    var optionsQuarter = {
-        series: [{
-            name: 'energy price',
-            data: []
+        // right bar chart options
+        var optionsQuarter = {
+          series: [{
+          name: 'energy price',
+          data: []
         }],
         chart: {
             id: 'barQuarter',
@@ -207,7 +208,6 @@
 
     var chartQuarter = new ApexCharts(document.querySelector("#chart-quarter"), optionsQuarter);
     chartQuarter.render();
-
 
     chart.addEventListener('dataPointSelection', function(e, chart, opts) {
         updateMonthChart(chart, 'barQuarter')

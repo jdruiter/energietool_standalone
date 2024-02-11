@@ -97,15 +97,14 @@ def month_barchart(request):
 
     item_spec = []
     for month_number in range(1, 13):
-
-        monthly_data = Energyprice.objects.filter(date__month=month_number, date__year=year, country_id="NL")
+        monthly_data = Energyprice.objects.filter(date__month=month_number, date__year = year, country_id="NL")
         average_value = monthly_data.aggregate(Avg('purchase_price'))['purchase_price__avg']
-        label = MONTHS[month_number - 1]
+        label = MONTHS[month_number-1]
         color = generate_random_color()
 
         data_for_linechart = []
         for entry in monthly_data:
-            data_for_linechart.append([datetime.combine(entry.date, entry.time).timestamp() * 1000, round(entry.all_in_price, 2)])
+            data_for_linechart.append([datetime.combine(entry.date, entry.time).timestamp() * 1000, round(entry.purchase_price, 2)])
 
         item_spec.append([label, average_value, color, data_for_linechart])
 
@@ -113,6 +112,7 @@ def month_barchart(request):
         "item_spec": item_spec,
         "year": year
     }
+
     return render(request, 'charts/month_bar_chart.html', context)
 
 
