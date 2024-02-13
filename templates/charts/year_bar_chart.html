@@ -1,0 +1,256 @@
+{% extends 'eprijzen/base.html' %}
+{% load i18n static %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'month_bar_chart/month_bar_chart.css' %}">
+{% endblock %}
+
+
+{% block chartcontent %}
+
+<div id="intro-text" class="container">
+    <p>{% trans "Click on bars to see the years details." %} </p>
+    <p><small>{% trans "Prices incl. all taxes (ODE, EB and BTW)" %}</small></p>
+</div>
+
+<!-- charts -->
+<div style="display: flex; margin-top:40px;">
+    <div id="chart-year"></div>
+    <div id="chart-quarter"></div>
+</div>
+
+<!-- collecting data for charts -->
+<script>
+    // function for making colors
+    function generateColorPalette(startColor = "#031B88", endColor = '#FAA7B8', steps) {
+        const colorScale = chroma.scale([startColor, endColor]).colors(steps);
+        return colorScale;
+    }
+
+    const customPalette = generateColorPalette(undefined, undefined, {{ number_of_years | safe }});
+
+
+    var Data = [];
+    var Colors = [];
+    let ind = 0;
+    {% for label, _, month_price, label_val in item_spec %}
+        var label_val = {{ label_val | safe }};
+
+        var quarter = [];
+        for (var i = 0; i < label_val.length; i++) {
+            var d = {
+                x: label_val[i][0],
+                y: label_val[i][1]
+            };
+            quarter.push(d);
+        }
+
+        var dictionary = {
+                x: "{{label}}",
+                y: {{month_price}},
+                color: customPalette[ind],
+                quarters: quarter
+            };
+
+        Colors.push(customPalette[ind]);
+        Data.push(dictionary)
+        ind += 1;
+    {% endfor %}
+</script>
+
+
+
+<script>
+
+
+    // function for updating parameters
+    function updateMonthChart(sourceChart, destChartIDToUpdate) {
+        var series = [];
+        var seriesIndex = 0;
+        var colors = [];
+
+        if (sourceChart.w.globals.selectedDataPoints[0]) {
+            var selectedPoints = sourceChart.w.globals.selectedDataPoints;
+            for (var i = 0; i < selectedPoints[seriesIndex].length; i++) {
+                var selectedIndex = selectedPoints[seriesIndex][i];
+                var yearSeries = sourceChart.w.config.series[seriesIndex];
+                series.push({
+                    name: yearSeries.data[selectedIndex].x,
+                    data: yearSeries.data[selectedIndex].quarters
+                })
+                colors.push(yearSeries.data[selectedIndex].color)
+
+            }
+
+            if (series.length === 0) series = [{
+                data: []
+            }]
+            console.log(series)
+            return ApexCharts.exec(destChartIDToUpdate, 'updateOptions', {
+                series: series,
+                colors: colors,
+                fill: {
+                    colors: colors
+                }
+            })
+        }
+    }
+
+    // options for left bar chart
+         var options = {
+          series: [{
+          data: Data
+        }],
+          chart: {
+          id: 'barYear',
+          height: 400,
+          width: '200%',
+          type: 'bar',
+        },
+        plotOptions: {
+          bar: {
+            distributed: true,
+            horizontal: true,
+            barHeight: '75%',
+            dataLabels: {
+              position: 'bottom'
+            }
+          }
+        },
+        fill: {
+           opacity: 0.8
+        },
+        dataLabels: {
+          enabled: true,
+          textAnchor: 'start',
+          style: {
+            //colors: Colors
+          },
+          formatter: function (val, opt) {
+            return opt.w.globals.labels[opt.dataPointIndex]
+          },
+          offsetX: -40,
+          dropShadow: {
+            enabled: true
+          }
+        },
+
+        colors: Colors,
+
+        states: {
+          normal: {
+            filter: {
+              type: 'desaturate'
+            }
+          },
+          active: {
+            allowMultipleDataPointsSelection: false,
+            filter: {
+              type: 'darken',
+              value: 1
+            }
+          }
+        },
+        tooltip: {
+          x: {
+            show: false
+          },
+          y: {
+            title: {
+              formatter: function (val, opts) {
+                return opts.w.globals.labels[opts.dataPointIndex]
+              }
+            }
+          }
+        },
+        title: {
+          text: 'Yearly Results',
+          offsetX: 15
+        },
+        subtitle: {
+          text: '(Click on bar to see details)',
+          offsetX: 15
+        },
+        yaxis: {
+          labels: {
+            show: false
+          }
+        }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart-year"), options);
+        chart.render();
+
+    // options for right bar chart
+        var optionsQuarter = {
+          series: [{
+          data: []
+        }],
+          chart: {
+          id: 'barQuarter',
+          height: 400,
+          width: '300%',
+          type: 'bar',
+          stacked: false
+        },
+        plotOptions: {
+          bar: {
+            columnWidth: '50%',
+            horizontal: false
+          }
+        },
+        legend: {
+          show: false
+        },
+        grid: {
+          yaxis: {
+            lines: {
+              show: false,
+            }
+          },
+          xaxis: {
+            lines: {
+              show: true,
+            }
+          }
+        },
+        yaxis: {
+          labels: {
+            show: false
+          }
+        },
+        title: {
+          text: 'Monthly Results',
+          offsetX: 10
+        },
+        colors: Colors,
+        tooltip: {
+          x: {
+            formatter: function (val, opts) {
+              return opts.w.globals.seriesNames[opts.seriesIndex]
+            }
+          },
+          y: {
+            title: {
+              formatter: function (val, opts) {
+                return opts.w.globals.labels[opts.dataPointIndex]
+              }
+            }
+          }
+        },
+        };
+
+        var chartQuarter = new ApexCharts(document.querySelector("#chart-quarter"), optionsQuarter);
+        chartQuarter.render();
+
+
+        chart.addEventListener('dataPointSelection', function (e, chart, opts) {
+        updateMonthChart(chart, 'barQuarter')
+      })
+
+      chart.addEventListener('updated', function (chart) {
+            updateMonthChart(chart, 'barQuarter')
+      })
+
+    </script>
+
+{% endblock %}

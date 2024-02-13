@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <script src="{% static 'libs/apexcharts/apexcharts.min.js' %}"></script>
     <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 </head>
 
 <body>
@@ -43,9 +44,8 @@
     let DataArray = energy_prices_data;
     let minValue = DataArray[0][0];
     let maxValue = DataArray[DataArray.length-1][0];
-    console.log('Min: ', new Date(minValue));
-    console.log('Max: ', new Date(maxValue));
-    //console.log(energy_prices_data);
+
+    let firstLabel = moment(DataArray[0][0]).format("DD MMM");
 
     var options = {
       series: [{
@@ -56,7 +56,6 @@
         type: 'area',
         stacked: false,
         height: 350,
-
         toolbar: {
           autoSelected: 'zoom',
             tools: {
@@ -74,7 +73,6 @@
           autoScaleYaxis: true
         },
     },
-
       dataLabels: {
         enabled: false
       },
@@ -101,8 +99,16 @@
       },
       xaxis: {
         type: 'datetime',
-        //min: new Date(minValue).getTime(),
-        //max: new Date(maxValue).getTime(),
+          labels: {
+              //datetimeUTC: true,
+              // format: 'd MMM',
+              //hour: "HH:MM"
+               datetimeFormatter: {
+                month: firstLabel
+          },
+    },
+        min: minValue,
+        max: maxValue,
       },
       tooltip: {
         shared: false,

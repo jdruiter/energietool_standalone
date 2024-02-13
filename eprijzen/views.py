@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta, date, timezone
 from django.shortcuts import render, HttpResponse, render
 from django.contrib import messages
 from django.utils.translation import gettext as _
@@ -8,6 +8,7 @@ from django.db.models.functions import ExtractYear
 import requests
 import json
 import random
+from pprint import pprint
 
 from eprijzen.models import Energyprice, Gasprice
 
@@ -25,7 +26,9 @@ def generate_random_color():
     return color
 
 def homepage(request):
-    return render(request, 'eprijzen/homepage.html', {})
+    return render(request, 'eprijzen/base.html', {})
+
+
 
 def linechart(request):
     """ Shows zoomable linechart with energyprices and gaspricecs NL """
@@ -37,12 +40,11 @@ def linechart(request):
     month_name = MONTHS[month - 1]
 
     energyprices = Energyprice.objects.filter(country_id="NL", date__month=month, date__year=year).order_by('date', 'time')
-
+    print(datetime(2024, 1, 20).timestamp()*1000)
     energy_prices_data = []
     for entry in energyprices:
-        energy_prices_data.append( [datetime.combine(entry.date, entry.time).timestamp()*1000, entry.all_in_price] )
-    # energy_prices_data = [ [f"{e.date} {e.time}", e.all_in_price] for e in energyprices]
-    print(energy_prices_data[:10])
+        energy_prices_data.append( [datetime.combine(entry.date, entry.time, tzinfo=timezone.utc).timestamp()*1000, entry.purchase_price] )
+    #energy_prices_data = [ [f"{e.date} {e.time}", e.all_in_price] for e in energyprices]
 
     context = {
         "energy_prices_data":energy_prices_data,
@@ -57,11 +59,13 @@ def linechart(request):
 def year_barchart(request):
 
     # sum_by_year = Energyprice.objects.filter(country_id="NL").annotate(year=ExtractYear('date')).values('year').annotate(total_price=Sum('all_in_price'))
-    avg_by_year = Energyprice.objects.filter(country_id="NL").annotate(year=ExtractYear('date')).values('year').annotate(total_price=Avg('all_in_price'))
+    avg_by_year = Energyprice.objects.filter(country_id="NL").annotate(year=ExtractYear('date')).values('year').annotate(total_price=Avg('purchase_price'))
+
+    print(avg_by_year)
 
     # getting data for year chart
     years =  [entry['year'] for entry in list(avg_by_year)]
-    year_prices = [entry['total_price'] for entry in list(avg_by_year)]
+    year_prices = [round(entry['total_price'], 3) for entry in list(avg_by_year)]
     colors = [generate_random_color() for i in range(len(years))]
 
     # getting data for month chart
@@ -71,10 +75,9 @@ def year_barchart(request):
         months_values = []
         for month in range(1, 13):
             prices_for_month = Energyprice.objects.filter(date__year=year, date__month=month)
-            total_price_for_month = prices_for_month.aggregate(total_price=Sum('all_in_price'))['total_price'] or 0   # todo use Avg, annotate?
-            # create 2 functions: total_price_per_month() and avg_prive_per_month(), so we can choose
+            total_price_for_month = prices_for_month.aggregate(total_price=Avg('purchase_price'))['total_price'] or 0   # todo use Avg, annotate?
             months_labels.append(MONTHS[month-1])
-            months_values.append(round(total_price_for_month))
+            months_values.append(round(total_price_for_month, 3))
 
         months_bar_values[year] = [list(item) for item in list(zip(months_labels, months_values))]
 
@@ -85,11 +88,14 @@ def year_barchart(request):
         item_spec[ind].append(months_bar_values[year])
         ind += 1
 
+    pprint(item_spec)
+
     context = {
-        "item_spec": item_spec
+        "item_spec": item_spec,
+        "number_of_years": len(years),
     }
 
-    return render(request, 'charts/barchart.html', context)
+    return render(request, 'charts/year_bar_chart.html', context)
 
 
 def month_barchart(request):
@@ -104,13 +110,15 @@ def month_barchart(request):
 
         data_for_linechart = []
         for entry in monthly_data:
-            data_for_linechart.append([datetime.combine(entry.date, entry.time).timestamp() * 1000, round(entry.purchase_price, 2)])
+            data_for_linechart.append([datetime.combine(entry.date, entry.time, tzinfo=timezone.utc).timestamp() * 1000, round(entry.purchase_price, 2)])
 
-        item_spec.append([label, average_value, color, data_for_linechart])
+        if average_value:
+            item_spec.append([label, round(average_value, 2), color, data_for_linechart])
 
     context = {
         "item_spec": item_spec,
-        "year": year
+        "year": year,
+        "number_of_months": len(item_spec)
     }
 
     return render(request, 'charts/month_bar_chart.html', context)
@@ -120,30 +128,41 @@ def week_barchart(request):
     """ Show clickable barchart
     Todo start the chart always at 2024. Users can go prev year and next year through time
     """
-    # current_date = datetime(2022, 8, 27)
-    current_date = datetime.now()
-    start_of_week = current_date - timedelta(days=6)
+
+    date = request.GET.get("startOfWeek", None)
+
+    if date:
+        start_of_week = datetime.strptime(date, '%Y-%m-%dT%H:%M')
+    else:
+        current_date = datetime.now()
+        start_of_week = current_date - timedelta(days=6)
+        start_of_week = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=timezone.utc)
+
     date_range = [start_of_week + timedelta(days=x) for x in range(0, 7)]
 
     item_spec = []
     for date in date_range:
         daily_data = Energyprice.objects.filter(date=date, country_id="NL")
+
         daily_data = daily_data.order_by('time')
 
         # data for bar chart
         average_value = daily_data.aggregate(Avg('all_in_price'))['all_in_price__avg']
-        label = date.strftime("%d.%m.%Y")
+        label = date.strftime("%A")
         color = generate_random_color()
 
         # data for linechart
         data_for_linechart = []
         for entry in daily_data:
-            data_for_linechart.append([datetime.combine(entry.date, entry.time).timestamp() * 1000, entry.all_in_price])
+            data_for_linechart.append([datetime.combine(entry.date, entry.time, tzinfo=timezone.utc).timestamp() * 1000, entry.all_in_price])
 
         item_spec.append([label, average_value, color, data_for_linechart])
 
     context = {
-        "year": current_date.year,
-        "item_spec": item_spec
+        "start_of_week": start_of_week.strftime('%Y-%m-%dT%H:%M'),
+        "item_spec": item_spec,
+        "number_of_days": len(item_spec),
     }
-    return render(request, 'charts/month_bar_chart.html', context)  # todo make own html page
+
+    print(start_of_week.strftime('%Y-%m-%dT%H:%M'))
+    return render(request, 'charts/week_bar_chart.html', context)  # todo make own html page

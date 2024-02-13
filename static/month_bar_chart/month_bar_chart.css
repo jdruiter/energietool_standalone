@@ -1,0 +1,34 @@
+#navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+}
+
+#previous-year,
+#next-year {
+    white-space: nowrap;
+    user-select: none;
+}
+
+#charts {
+    margin-top: 20px;
+}
+
+#previous-year,
+#next-year {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #9b9b9b;
+    transition: color 0.3s;
+}
+
+
+#previous-year:hover,
+#next-year:hover {
+    color: #504f4f;
+}
+
+#hidden-form {
+    display: none;
+}

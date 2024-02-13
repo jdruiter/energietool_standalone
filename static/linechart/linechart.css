@@ -1,0 +1,32 @@
+#navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+}
+
+#previous-month,
+#next-month {
+    white-space: nowrap;
+    user-select: none;
+}
+
+
+#previous-month,
+#next-month {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #9b9b9b;
+    transition: color 0.3s;
+}
+
+
+#previous-month:hover,
+#next-month:hover {
+    color: #504f4f;
+}
+
+#hidden-form {
+    display: none;
+}
+

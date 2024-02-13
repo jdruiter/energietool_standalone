@@ -4,21 +4,30 @@
 {% block chartcontent %}
 
 <script>
+    // function for making colors
+    function generateColorPalette(startColor = "#031B88", endColor = '#FAA7B8', steps) {
+        const colorScale = chroma.scale([startColor, endColor]).colors(steps);
+        return colorScale;
+    }
+
+    const customPalette = generateColorPalette(undefined, undefined, {{ number_of_months | safe }});
+
     /* Load the data */
     var Data = [];
     var Colors = [];
+    let ind = 0;
     {% for label, avg_value, color, line_chart_data in item_spec %}
 
         var dictionary = {
             x: "{{label}}",
-            y: {{avg_value}},
-            color: "{{color}}",
+            y: {{avg_value | safe}},
+            color: customPalette[ind],
             lineChartData: {{line_chart_data}}
         };
 
-        Colors.push("{{color}}");
+        Colors.push(customPalette[ind]);
         Data.push(dictionary);
-
+        ind += 1;
     {% endfor %}
 </script>
 
@@ -58,17 +67,23 @@
                 colors.push(yearSeries.data[selectedIndex].color)
             }
 
-            if (series.length === 0) series = [{
-                data: []
-            }]
-            console.log(series)
+            if (series.length === 0) {
+                series = [{
+                    data: []
+                }]
+                return ApexCharts.exec(destChartIDToUpdate, 'updateOptions', {
+                series: series,
+            })
+            }
+
             return ApexCharts.exec(destChartIDToUpdate, 'updateOptions', {
                 series: series,
-                color: "#00F",
+                colors: colors,
             })
         }
     }
 
+    // options for left barchart
     var options = {
         series: [{
             data: Data
@@ -78,6 +93,12 @@
             height: 400,
             width: '200%',
             type: 'bar',
+            toolbar: {
+                autoSelected: 'zoom',
+                tools: {
+                    download: false,
+                }
+            }
         },
         plotOptions: {
             bar: {
@@ -93,7 +114,7 @@
             enabled: true,
             textAnchor: 'start',
             style: {
-                colors: Colors
+                //colors: Colors
             },
             formatter: function(val, opt) {
                 return opt.w.globals.labels[opt.dataPointIndex]
@@ -150,7 +171,14 @@
             labels: {
                 show: false
             }
+        },
+        xaxis: {
+        labels: {
+            formatter: function (value) {
+                return value.toFixed(2);
+            }
         }
+    },
     };
 
     var chart = new ApexCharts(document.querySelector("#chart-year"), options);
@@ -174,7 +202,15 @@
                 autoScaleYaxis: true
             },
             toolbar: {
-                autoSelected: 'zoom'
+                autoSelected: 'zoom',
+                tools: {
+                    pan: false,
+                    download: false,
+                    selection: false,
+                    zoomin: false,
+                    zoomout: false,
+                    zoom: true,
+                }
             }
         },
         dataLabels: {
