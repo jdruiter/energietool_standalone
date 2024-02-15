@@ -6,6 +6,7 @@
 <script>
     // function for making colors
     function generateColorPalette(startColor = "#031B88", endColor = '#FAA7B8', steps) {
+        if (steps === 2) return [startColor, endColor]
         const colorScale = chroma.scale([startColor, endColor]).colors(steps);
         return colorScale;
     }
@@ -18,16 +19,16 @@
     let ind = 0;
     {% for label, avg_value, color, line_chart_data in item_spec %}
 
-        var dictionary = {
-            x: "{{label}}",
-            y: {{avg_value | safe}},
-            color: customPalette[ind],
-            lineChartData: {{line_chart_data}}
-        };
+            var dictionary = {
+                x: "{{label}}",
+                y: {{avg_value | safe}},
+                color: customPalette[ind],
+                lineChartData: {{line_chart_data}}
+            };
 
-        Colors.push(customPalette[ind]);
-        Data.push(dictionary);
-        ind += 1;
+            Colors.push(customPalette[ind]);
+            Data.push(dictionary);
+            ind += 1;
     {% endfor %}
     console.log(Data);
     // function for left bar chart title

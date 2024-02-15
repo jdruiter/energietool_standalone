@@ -1,7 +1,7 @@
 {% extends 'eprijzen/base.html' %}
 {% load i18n static %}
 {% block styles %}
-<link rel="stylesheet" type="text/css" href="{% static 'month_bar_chart/month_bar_chart.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'barchart/barchart.css' %}">
 {% endblock %}
 
 
@@ -12,27 +12,34 @@
     <p><small>{% trans "Prices incl. all taxes (ODE, EB and BTW)" %}</small></p>
 </div>
 
-<!-- charts -->
+<!-- energy chart -->
+{% if energy_data %}
 <div style="display: flex; margin-top:40px;">
-    <div id="chart-year"></div>
-    <div id="chart-quarter"></div>
+    <div id="chart-year-energy"></div>
+    <div id="chart-quarter-energy"></div>
 </div>
+{% endif %}
 
-<!-- collecting data for charts -->
+<!-- gas chart -->
+{% if gas_data %}
+<div style="display: flex; margin-top:40px;">
+    <div id="chart-year-gas"></div>
+    <div id="chart-quarter-gas"></div>
+</div>
+{% endif %}
+
+<!-- collecting data for energy chart -->
 <script>
     // function for making colors
     function generateColorPalette(startColor = "#031B88", endColor = '#FAA7B8', steps) {
-        const colorScale = chroma.scale([startColor, endColor]).colors(steps);
-        return colorScale;
+        return chroma.scale([startColor, endColor]).colors(steps);
     }
 
-    const customPalette = generateColorPalette(undefined, undefined, {{ number_of_years | safe }});
-
-
-    var Data = [];
-    var Colors = [];
-    let ind = 0;
-    {% for label, _, month_price, label_val in item_spec %}
+    var customPalette = generateColorPalette(undefined, undefined, {{ number_of_years_energy | safe }});
+    var EnergyData = [];
+    var ColorsEnergy = [];
+    var ind = 0;
+    {% for label, c, month_price, label_val in energy_data %}
         var label_val = {{ label_val | safe }};
 
         var quarter = [];
@@ -51,17 +58,47 @@
                 quarters: quarter
             };
 
-        Colors.push(customPalette[ind]);
-        Data.push(dictionary)
+        ColorsEnergy.push(customPalette[ind]);
+        EnergyData.push(dictionary)
+        ind += 1;
+    {% endfor %}
+
+</script>
+
+<!-- collecting data for gas chart -->
+<script>
+    var customPaletteGas = generateColorPalette(undefined, undefined, 7);
+    var GasData = [];
+    var ColorsGas = [];
+    var ind = 0;
+    {% for label, c, month_price, label_val in gas_data %}
+        var label_val = {{ label_val | safe }};
+
+        var quarter = [];
+        for (var i = 0; i < label_val.length; i++) {
+            var d = {
+                x: label_val[i][0],
+                y: label_val[i][1]
+            };
+            quarter.push(d);
+        }
+
+        var dictionary = {
+                x: "{{label}}",
+                y: {{month_price}},
+                color: customPaletteGas[ind],
+                quarters: quarter
+            };
+
+        ColorsGas.push(customPaletteGas[ind]);
+        GasData.push(dictionary)
         ind += 1;
     {% endfor %}
 </script>
 
 
-
+<!-- Energy chart-->
 <script>
-
-
     // function for updating parameters
     function updateMonthChart(sourceChart, destChartIDToUpdate) {
         var series = [];
@@ -84,7 +121,6 @@
             if (series.length === 0) series = [{
                 data: []
             }]
-            console.log(series)
             return ApexCharts.exec(destChartIDToUpdate, 'updateOptions', {
                 series: series,
                 colors: colors,
@@ -96,12 +132,12 @@
     }
 
     // options for left bar chart
-         var options = {
+         var optionsEnergy = {
           series: [{
-          data: Data
+          data: EnergyData
         }],
           chart: {
-          id: 'barYear',
+          id: 'barYearEnergy',
           height: 400,
           width: '200%',
           type: 'bar',
@@ -128,13 +164,13 @@
           formatter: function (val, opt) {
             return opt.w.globals.labels[opt.dataPointIndex]
           },
-          offsetX: -40,
+          offsetX: -20,
           dropShadow: {
             enabled: true
           }
         },
 
-        colors: Colors,
+        colors: ColorsEnergy,
 
         states: {
           normal: {
@@ -163,7 +199,7 @@
           }
         },
         title: {
-          text: 'Yearly Results',
+          text: 'Yearly Energy Prices',
           offsetX: 15
         },
         subtitle: {
@@ -174,10 +210,17 @@
           labels: {
             show: false
           }
+        },
+        xaxis: {
+        labels: {
+            formatter: function (value) {
+                return value.toFixed(2);
+            }
         }
+    },
         };
 
-        var chart = new ApexCharts(document.querySelector("#chart-year"), options);
+        var chart = new ApexCharts(document.querySelector("#chart-year-energy"), optionsEnergy);
         chart.render();
 
     // options for right bar chart
@@ -186,7 +229,7 @@
           data: []
         }],
           chart: {
-          id: 'barQuarter',
+          id: 'barQuarterEnergy',
           height: 400,
           width: '300%',
           type: 'bar',
@@ -219,10 +262,10 @@
           }
         },
         title: {
-          text: 'Monthly Results',
+          text: 'Monthly Energy Prices',
           offsetX: 10
         },
-        colors: Colors,
+        colors: ColorsEnergy,
         tooltip: {
           x: {
             formatter: function (val, opts) {
@@ -239,18 +282,45 @@
         },
         };
 
-        var chartQuarter = new ApexCharts(document.querySelector("#chart-quarter"), optionsQuarter);
+        var chartQuarter = new ApexCharts(document.querySelector("#chart-quarter-energy"), optionsQuarter);
         chartQuarter.render();
 
 
         chart.addEventListener('dataPointSelection', function (e, chart, opts) {
-        updateMonthChart(chart, 'barQuarter')
+        updateMonthChart(chart, 'barQuarterEnergy')
       })
 
       chart.addEventListener('updated', function (chart) {
-            updateMonthChart(chart, 'barQuarter')
+            updateMonthChart(chart, 'barQuarterEnergy')
       })
+</script>
 
-    </script>
+<!-- Gas chart-->
+<script>
+// options for left bar chart
+var optionsGas = _.cloneDeep(optionsEnergy);
+optionsGas.series = [{data: GasData}];
+optionsGas.chart.id = 'barYearGas';
+optionsGas.colors = ColorsGas;
+optionsGas.title.text = 'Yearly Gas Prices';
+
+// options for right bar chart
+optionsQuarterGas = _.cloneDeep(optionsQuarter);
+optionsQuarterGas.chart.id = 'barQuarterGas';
+optionsQuarterGas.title.text = 'Monthly Gas Prices';
+optionsQuarterGas.colors = ColorsGas;
+
+var chartGas = new ApexCharts(document.querySelector("#chart-year-gas"), optionsGas);
+chartGas.render();
+
+var chartQuarterGas = new ApexCharts(document.querySelector("#chart-quarter-gas"), optionsQuarterGas);
+chartQuarterGas.render();
+
+chartGas.addEventListener('dataPointSelection', function (e, chart, opts) {
+    updateMonthChart(chart, 'barQuarterGas')})
+
+chartGas.addEventListener('updated', function (chart) {
+    updateMonthChart(chart, 'barQuarterGas')})
+</script>
 
 {% endblock %}
