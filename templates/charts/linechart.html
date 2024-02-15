@@ -12,6 +12,8 @@
     <script src="{% static 'libs/apexcharts/apexcharts.min.js' %}"></script>
     <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <!-- lodash library for deep copy -->
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.js"></script>
 </head>
 
 <body>
@@ -33,21 +35,21 @@
     <div id="next-month" onclick="timeDelta(1)">next month <i class="bi bi-chevron-double-right"></i></div>
 </div>
 
-{% if energy_prices_data %}
+<!-- charts -->
+<div id="chart-energy"></div>
+<div id="chart-gas"></div>
 
-<div id="chart"></div>
 
+<!-- energy chart -->
 <script>
 
-    let energy_prices_data = {{energy_prices_data|safe}};
+    let energy_prices_data = {{energy_data|safe}};
 
     let DataArray = energy_prices_data;
     let minValue = DataArray[0][0];
     let maxValue = DataArray[DataArray.length-1][0];
 
-    let firstLabel = moment(DataArray[0][0]).format("DD MMM");
-
-    var options = {
+    var optionsEnergy = {
       series: [{
         name: 'energy price',
         data: energy_prices_data
@@ -101,10 +103,8 @@
         type: 'datetime',
           labels: {
               //datetimeUTC: true,
-              // format: 'd MMM',
-              //hour: "HH:MM"
-               datetimeFormatter: {
-                month: firstLabel
+              datetimeFormatter: {
+                month: "dd MMM"
           },
     },
         min: minValue,
@@ -114,7 +114,7 @@
         shared: false,
       },
       title: {
-        text: '{{ month_name }}, {{ year }}',
+        text: 'Energy prices for {{ month_name }} {{ year }}',
         align: 'center',
         margin: 10,
         style: {
@@ -124,10 +124,19 @@
 
     };
 
-    var chart = new ApexCharts(document.querySelector("#chart"), options);
-    chart.render();
+    var chartEnergy = new ApexCharts(document.querySelector("#chart-energy"), optionsEnergy);
+    chartEnergy.render();
 </script>
-{% endif %}
+
+<!-- Gas chart-->
+<script>
+var optionsGas = _.cloneDeep(optionsEnergy);
+optionsGas.series = [{name:'gas price', data: {{ gas_data }} }];
+optionsGas.title.text = 'Gas prices for {{ month_name }} {{ year }}';
+
+var chartGas = new ApexCharts(document.querySelector("#chart-gas"), optionsGas);
+chartGas.render();
+</script>
 
 <!-- function for the left and right arrows -->
 <script>

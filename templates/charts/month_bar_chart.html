@@ -3,33 +3,6 @@
 
 {% block chartcontent %}
 
-<script>
-    // function for making colors
-    function generateColorPalette(startColor = "#031B88", endColor = '#FAA7B8', steps) {
-        const colorScale = chroma.scale([startColor, endColor]).colors(steps);
-        return colorScale;
-    }
-
-    const customPalette = generateColorPalette(undefined, undefined, {{ number_of_months | safe }});
-
-    /* Load the data */
-    var Data = [];
-    var Colors = [];
-    let ind = 0;
-    {% for label, avg_value, color, line_chart_data in item_spec %}
-
-        var dictionary = {
-            x: "{{label}}",
-            y: {{avg_value | safe}},
-            color: customPalette[ind],
-            lineChartData: {{line_chart_data}}
-        };
-
-        Colors.push(customPalette[ind]);
-        Data.push(dictionary);
-        ind += 1;
-    {% endfor %}
-</script>
 
 <!-- hidden form to store year -->
 <form id="hidden-form" method="get" action="{% url 'monthchart' %}">
@@ -42,13 +15,72 @@
 </div>
 
 
-<!-- charts -->
-<div style="display: flex;" id="charts">
-    <div id="chart-year"></div>
-    <div id="chart-quarter"></div>
+<!-- energy chart -->
+<div style="display: flex; margin-top:40px;">
+    <div id="chart-year-energy"></div>
+    <div id="chart-quarter-energy"></div>
+</div>
+
+<!-- gas charts -->
+<div style="display: flex; margin-top:40px;">
+    <div id="chart-year-gas"></div>
+    <div id="chart-quarter-gas"></div>
 </div>
 
 
+<!-- loading data for energy chart -->
+<script>
+    // function for making colors
+    function generateColorPalette(startColor = "#031B88", endColor = '#FAA7B8', steps) {
+        return chroma.scale([startColor, endColor]).colors(steps);
+    }
+
+    var customPalette = generateColorPalette(undefined, undefined, {{ number_of_months_energy | safe }});
+
+    /* Load the data */
+    var EnergyData = [];
+    var ColorsEnergy = [];
+    var ind = 0;
+    {% for label, avg_value, line_chart_data in energy_data %}
+
+        var dictionary = {
+            x: "{{label}}",
+            y: {{avg_value | safe}},
+            color: customPalette[ind],
+            lineChartData: {{line_chart_data}}
+        };
+
+        ColorsEnergy.push(customPalette[ind]);
+        EnergyData.push(dictionary);
+        ind += 1;
+    {% endfor %}
+</script>
+
+<!-- loading data for gas chart -->
+<script>
+    var customPalette = generateColorPalette(undefined, undefined, {{ number_of_months_gas | safe }});
+
+    /* Load the data */
+    var GasData = [];
+    var ColorsGas = [];
+    var ind = 0;
+    {% for label, avg_value, line_chart_data in gas_data %}
+
+        var dictionary = {
+            x: "{{label}}",
+            y: {{avg_value | safe}},
+            color: customPalette[ind],
+            lineChartData: {{line_chart_data}}
+        };
+
+        ColorsGas.push(customPalette[ind]);
+        GasData.push(dictionary);
+        ind += 1;
+    {% endfor %}
+</script>
+
+
+<!-- energy chart -->
 <script>
     // function for updating chart options
     function updateMonthChart(sourceChart, destChartIDToUpdate) {
@@ -84,12 +116,12 @@
     }
 
     // options for left barchart
-    var options = {
+    var optionsEnergy = {
         series: [{
-            data: Data
+            data: EnergyData
         }],
         chart: {
-            id: 'barYear',
+            id: 'barYearEnergy',
             height: 400,
             width: '200%',
             type: 'bar',
@@ -125,7 +157,7 @@
             }
         },
 
-        colors: Colors,
+        colors: ColorsEnergy,
 
         states: {
             normal: {
@@ -154,7 +186,7 @@
             }
         },
         title: {
-            text: 'Monthly results for {{ year }}',
+            text: 'Monthly energy prices for {{ year }}',
             offsetX: 15,
             style: {
                 fontSize: '20px',
@@ -181,17 +213,17 @@
     },
     };
 
-    var chart = new ApexCharts(document.querySelector("#chart-year"), options);
+    var chart = new ApexCharts(document.querySelector("#chart-year-energy"), optionsEnergy);
     chart.render();
 
-        // right bar chart options
-        var optionsQuarter = {
+        // right line chart options
+        var optionsQuarterEnergy = {
           series: [{
           name: 'energy price',
           data: []
         }],
         chart: {
-            id: 'barQuarter',
+            id: 'barQuarterEnergy',
             type: 'area',
             stacked: false,
             width: 700,
@@ -235,24 +267,60 @@
             },
         },
         xaxis: {
-            type: 'datetime',
+        type: 'datetime',
+          labels: {
+              //datetimeUTC: true,
+              datetimeFormatter: {
+                month: "dd MMM"
+              },
+          },
         },
         tooltip: {
             shared: false,
         }
     };
 
-    var chartQuarter = new ApexCharts(document.querySelector("#chart-quarter"), optionsQuarter);
+    var chartQuarter = new ApexCharts(document.querySelector("#chart-quarter-energy"), optionsQuarterEnergy);
     chartQuarter.render();
 
     chart.addEventListener('dataPointSelection', function(e, chart, opts) {
-        updateMonthChart(chart, 'barQuarter')
+        updateMonthChart(chart, 'barQuarterEnergy')
     })
 
     chart.addEventListener('updated', function(chart) {
-        updateMonthChart(chart, 'barQuarter')
+        updateMonthChart(chart, 'barQuarterEnergy')
     })
 </script>
+
+
+<!-- gas chart -->
+<script>
+
+// options for left bar chart
+var optionsGas = _.cloneDeep(optionsEnergy);
+optionsGas.series = [{data: GasData}];
+optionsGas.chart.id = 'barYearGas';
+optionsGas.colors = ColorsGas;
+optionsGas.title.text = 'Monthly gas prices for {{ year }}';
+
+// options for right line chart
+optionsQuarterGas = _.cloneDeep(optionsQuarterEnergy);
+optionsQuarterGas.chart.id = 'barQuarterGas';
+
+var chartGas = new ApexCharts(document.querySelector("#chart-year-gas"), optionsGas);
+chartGas.render();
+
+var chartQuarterGas = new ApexCharts(document.querySelector("#chart-quarter-gas"), optionsQuarterGas);
+chartQuarterGas.render();
+
+chartGas.addEventListener('dataPointSelection', function (e, chart, opts) {
+    updateMonthChart(chart, 'barQuarterGas')})
+
+chartGas.addEventListener('updated', function (chart) {
+    updateMonthChart(chart, 'barQuarterGas')})
+</script>
+
+
 
 <!-- function for the left and right arrows -->
 <script>

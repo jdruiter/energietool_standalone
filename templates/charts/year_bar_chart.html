@@ -39,7 +39,7 @@
     var EnergyData = [];
     var ColorsEnergy = [];
     var ind = 0;
-    {% for label, c, month_price, label_val in energy_data %}
+    {% for label, month_price, label_val in energy_data %}
         var label_val = {{ label_val | safe }};
 
         var quarter = [];
@@ -71,7 +71,7 @@
     var GasData = [];
     var ColorsGas = [];
     var ind = 0;
-    {% for label, c, month_price, label_val in gas_data %}
+    {% for label, month_price, label_val in gas_data %}
         var label_val = {{ label_val | safe }};
 
         var quarter = [];
@@ -220,11 +220,11 @@
     },
         };
 
-        var chart = new ApexCharts(document.querySelector("#chart-year-energy"), optionsEnergy);
-        chart.render();
+        var chartEnergy = new ApexCharts(document.querySelector("#chart-year-energy"), optionsEnergy);
+        chartEnergy.render();
 
     // options for right bar chart
-        var optionsQuarter = {
+        var optionsQuarterEnergy = {
           series: [{
           data: []
         }],
@@ -282,15 +282,15 @@
         },
         };
 
-        var chartQuarter = new ApexCharts(document.querySelector("#chart-quarter-energy"), optionsQuarter);
-        chartQuarter.render();
+        var chartQuarterEnergy = new ApexCharts(document.querySelector("#chart-quarter-energy"), optionsQuarterEnergy);
+        chartQuarterEnergy.render();
 
 
-        chart.addEventListener('dataPointSelection', function (e, chart, opts) {
+        chartEnergy.addEventListener('dataPointSelection', function (e, chart, opts) {
         updateMonthChart(chart, 'barQuarterEnergy')
       })
 
-      chart.addEventListener('updated', function (chart) {
+      chartEnergy.addEventListener('updated', function (chart) {
             updateMonthChart(chart, 'barQuarterEnergy')
       })
 </script>
@@ -305,7 +305,7 @@ optionsGas.colors = ColorsGas;
 optionsGas.title.text = 'Yearly Gas Prices';
 
 // options for right bar chart
-optionsQuarterGas = _.cloneDeep(optionsQuarter);
+optionsQuarterGas = _.cloneDeep(optionsQuarterEnergy);
 optionsQuarterGas.chart.id = 'barQuarterGas';
 optionsQuarterGas.title.text = 'Monthly Gas Prices';
 optionsQuarterGas.colors = ColorsGas;
