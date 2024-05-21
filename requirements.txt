@@ -4,7 +4,7 @@ charset-normalizer==3.3.2
 Django==4.2.10
 django-extensions==3.2.3
 idna==3.6
-requests==2.31.0
+requests==2.32.0
 sqlparse==0.4.4
 typing_extensions==4.9.0
 urllib3==2.2.0
